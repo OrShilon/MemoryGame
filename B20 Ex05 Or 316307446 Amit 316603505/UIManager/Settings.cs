@@ -115,7 +115,7 @@ namespace UIManager
             // 
             // Settings
             // 
-            this.ClientSize = new System.Drawing.Size(584, 325);
+            this.ClientSize = new System.Drawing.Size(590, 325);
             this.Controls.Add(this.m_StartButton);
             this.Controls.Add(this.m_BoardSizeButton);
             this.Controls.Add(this.m_BoardSizeLabel);
@@ -198,16 +198,33 @@ namespace UIManager
                     }
                     else
                     {
-                        m_NumOfRows++;
+                        m_NumOfRows += 2;//רק היה צריך לעשות פה פלוס 2 וזה תיקן את ה 5 על 5
                     }
                 }
             }
 
             m_BoardSizeButton.Text = m_NumOfColumns + " x " + m_NumOfRows;
         }
-
+        /**
+         * כאשר מקליקים על נגד מחשב נגד שחקן
+         */
+        string m_AgainstPlayer = "Against a Player";
+        string m_AgainstComputer = "Against Computer";
+        string m_Computer = "-computer-";
         private void m_Against_Click(object sender, EventArgs e)
         {
+            m_TextBoxFriend.Enabled = !m_TextBoxFriend.Enabled;
+
+            if (m_Against.Text.Equals(m_AgainstPlayer))
+            {
+                m_Against.Text = m_AgainstComputer;
+                m_TextBoxFriend.Text = m_Computer;
+            }
+            else
+            {
+                m_Against.Text = m_AgainstPlayer;
+                m_TextBoxFriend.Text = String.Empty;
+            }
 
         }
     }
