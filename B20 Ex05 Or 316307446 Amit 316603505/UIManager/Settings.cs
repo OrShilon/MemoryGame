@@ -9,6 +9,11 @@ namespace UIManager
 {
     public partial class Settings : Form
     {
+        private const string k_AgainstPlayer = "Against a Player";
+        private const string k_AgainstComputer = "Against a Computer";
+        private const string k_Computer = "-computer-";
+        private readonly List<string> r_BoardSize = new List<string> {"4 x 4" , "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6"};
+        private int m_BoardSizePositionInList = 1;
         private Label m_FirstPlayerName;
         private TextBox m_TextBoxPlayer;
         private TextBox m_TextBoxFriend;
@@ -17,8 +22,6 @@ namespace UIManager
         private Button m_BoardSizeButton;
         private Button m_StartButton;
         private Label m_SecondPlayerName;
-        private int m_NumOfColumns = 4;
-        private int m_NumOfRows = 4;
 
         public Settings()
         {
@@ -156,73 +159,31 @@ namespace UIManager
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
         {
-            if(m_NumOfColumns != 5)
+            m_BoardSizeButton.Text = r_BoardSize[m_BoardSizePositionInList];
+
+            //need to change 1 to const
+            if(m_BoardSizePositionInList == (r_BoardSize.Count - 1))
             {
-                if (m_NumOfColumns == 6)
-                {
-                    if (m_NumOfRows == 6)
-                    {
-                        m_NumOfRows = 4;
-                        m_NumOfColumns = 4;
-                    }
-                    else
-                    {
-                        m_NumOfRows++;
-                    }
-                }
-                else
-                {
-                    if (m_NumOfRows == 6)
-                    {
-                        m_NumOfRows = 4;
-                        m_NumOfColumns++;
-                    }
-                    else
-                    {
-                        m_NumOfRows++;
-                    }
-                }
+                m_BoardSizePositionInList = 0;
             }
             else
             {
-                if(m_NumOfRows == 6)
-                {
-                    m_NumOfColumns++;
-                    m_NumOfRows = 4;
-                }
-                else
-                {
-                    if (m_NumOfRows == 5)
-                    {
-                        m_NumOfRows++;
-                    }
-                    else
-                    {
-                        m_NumOfRows += 2;//רק היה צריך לעשות פה פלוס 2 וזה תיקן את ה 5 על 5
-                    }
-                }
+                m_BoardSizePositionInList++;
             }
-
-            m_BoardSizeButton.Text = m_NumOfColumns + " x " + m_NumOfRows;
         }
-        /**
-         * כאשר מקליקים על נגד מחשב נגד שחקן
-         */
-        string m_AgainstPlayer = "Against a Player";
-        string m_AgainstComputer = "Against Computer";
-        string m_Computer = "-computer-";
+
         private void m_Against_Click(object sender, EventArgs e)
         {
             m_TextBoxFriend.Enabled = !m_TextBoxFriend.Enabled;
 
-            if (m_Against.Text.Equals(m_AgainstPlayer))
+            if (m_Against.Text.Equals(k_AgainstPlayer))
             {
-                m_Against.Text = m_AgainstComputer;
-                m_TextBoxFriend.Text = m_Computer;
+                m_Against.Text = k_AgainstComputer;
+                m_TextBoxFriend.Text = k_Computer;
             }
             else
             {
-                m_Against.Text = m_AgainstPlayer;
+                m_Against.Text = k_AgainstPlayer;
                 m_TextBoxFriend.Text = String.Empty;
             }
 
