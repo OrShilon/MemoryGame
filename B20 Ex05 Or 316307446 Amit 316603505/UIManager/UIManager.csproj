@@ -39,6 +39,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoardGame.cs" />
+    <Compile Include="HandleSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemoryGame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemoryGameButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
@@ -50,6 +60,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MemoryGame.resx">
+      <DependentUpon>MemoryGame.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
