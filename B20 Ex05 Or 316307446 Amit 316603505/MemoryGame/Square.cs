@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MemoryGame
 {
-    internal class Square
+    public class Square
     {
         private char letterInSquare;
 

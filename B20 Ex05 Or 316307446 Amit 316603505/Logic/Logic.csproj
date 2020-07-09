@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{18B0421A-5AED-40D6-9273-8AA21DB488C3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>MemoryGame</RootNamespace>
-    <AssemblyName>MemoryGame</AssemblyName>
+    <ProjectGuid>{3EB04230-AE8F-4AEF-B299-7123BA884455}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Logic</RootNamespace>
+    <AssemblyName>Logic</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,15 +32,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ex02.ConsoleUtils">
-      <HintPath>..\Ex02.ConsoleUtils.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,17 +46,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardGame.cs" />
-    <Compile Include="ComputerManager.cs" />
-    <Compile Include="GameManager.cs" />
-    <Compile Include="InputManager.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="MemoryGameButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpottedLetters.cs" />
-    <Compile Include="Square.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MemoryGame\MemoryGame.csproj">
+      <Project>{18b0421a-5aed-40d6-9273-8aa21db488c3}</Project>
+      <Name>MemoryGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

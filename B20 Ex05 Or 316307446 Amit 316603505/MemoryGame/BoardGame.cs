@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MemoryGame
 {
-    internal class BoardGame
+    public class BoardGame
     {
         public Square[,] m_SuqaresValue;
 
