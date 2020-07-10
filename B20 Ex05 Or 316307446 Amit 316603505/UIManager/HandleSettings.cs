@@ -11,17 +11,18 @@ namespace UIManager
     {
         private const string k_AgainstPlayer = "Against a Player";
         private const string k_AgainstComputer = "Against a Computer";
-        private const string k_Computer = "-computer-";
+        private const string k_Computer = "computer";
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
+        private bool m_ClosedForTheFirstTime = true;
 
 
-        private void label1_Click(object sender, EventArgs e)
+        private void FirstPlayerNameLabel_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void SecondPlayerNameLabel_Click(object sender, EventArgs e)
         {
 
         }
@@ -35,12 +36,27 @@ namespace UIManager
         {
             string boardSize = r_BoardSize[m_BoardSizePositionInList];
             //need to change to const
-            int numOfColumns = boardSize[0];
-            int numOfRows = boardSize[4];
+            int numOfColumns = boardSize[0] - '0';
+            int numOfRows = boardSize[4] - '0';
             string firstPlayerName = m_FirstPlayerName.Text;
             string secondPlayerName = m_SecondPlayerName.Text;
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
-            new MemoryGame(numOfColumns, numOfRows, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
+            this.Close();
+            m_ClosedForTheFirstTime = false;
+            MemoryGame newGame = new MemoryGame(numOfColumns, numOfRows, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
+            newGame.ShowDialog();
+        }
+
+        private void Settings_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (m_ClosedForTheFirstTime)
+            {
+                m_StartButton_Click(sender, e);
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
