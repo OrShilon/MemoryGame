@@ -104,7 +104,6 @@ namespace UIManager
             // 
             // m_CurrentPlayersTurn
             //
-            
             this.m_CurrentPlayersTurn.AutoSize = true;
             int XLocationCurrent = m_BoardGame.BoardGameWithButtons[0, 0].Location.X;
             int YLocationCurrent = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, 0].Bottom + 10;
