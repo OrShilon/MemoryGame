@@ -11,10 +11,10 @@ namespace UIManager
     {
         static void Main()
         {
-            MemoryGame temp = new MemoryGame(1, 1, true);
-            temp.ShowDialog();
-            //Settings temp = new Settings();
+            //MemoryGame temp = new MemoryGame(1, 1, true);
             //temp.ShowDialog();
+            Settings temp = new Settings();
+            temp.ShowDialog();
 
         }
     }

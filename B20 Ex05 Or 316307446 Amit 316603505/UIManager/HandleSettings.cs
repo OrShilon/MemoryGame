@@ -31,9 +31,16 @@ namespace UIManager
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void m_StartButton_Click(object sender, EventArgs e)
         {
-
+            string boardSize = r_BoardSize[m_BoardSizePositionInList];
+            //need to change to const
+            int numOfColumns = boardSize[0];
+            int numOfRows = boardSize[4];
+            string firstPlayerName = m_FirstPlayerName.Text;
+            string secondPlayerName = m_SecondPlayerName.Text;
+            bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
+            new MemoryGame(numOfRows, numOfColumns, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
         }
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
@@ -53,17 +60,17 @@ namespace UIManager
 
         private void m_Against_Click(object sender, EventArgs e)
         {
-            m_TextBoxFriend.Enabled = !m_TextBoxFriend.Enabled;
+            m_TextBoxSecondPlayer.Enabled = !m_TextBoxSecondPlayer.Enabled;
 
             if (m_Against.Text.Equals(k_AgainstPlayer))
             {
                 m_Against.Text = k_AgainstComputer;
-                m_TextBoxFriend.Text = k_Computer;
+                m_TextBoxSecondPlayer.Text = k_Computer;
             }
             else
             {
                 m_Against.Text = k_AgainstPlayer;
-                m_TextBoxFriend.Text = String.Empty;
+                m_TextBoxSecondPlayer.Text = String.Empty;
             }
 
         }
