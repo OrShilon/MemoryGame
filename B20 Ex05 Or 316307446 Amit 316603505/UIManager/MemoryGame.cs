@@ -14,7 +14,7 @@ namespace UIManager
         private BoardGame m_BoardGame;
 
 
-        public MemoryGame(int rows, int columns, bool isagainstComp) 
+        public MemoryGame(int i_NumOfRows, int i_NumOfColumns, bool i_IsAgainstHuman, string i_FirstPlayerName, string i_SecondPlayerName) 
         {
             InitializeComponent();
         }

@@ -10,8 +10,8 @@ namespace UIManager
     public partial class Settings : Form
     {
         private Label m_FirstPlayerName;
-        private TextBox m_TextBoxPlayer;
-        private TextBox m_TextBoxFriend;
+        private TextBox m_TextBoxFirstPlayer;
+        private TextBox m_TextBoxSecondPlayer;
         private Button m_Against;
         private Label m_BoardSizeLabel;
         private Button m_BoardSizeButton;
@@ -26,8 +26,8 @@ namespace UIManager
         {
             this.m_FirstPlayerName = new System.Windows.Forms.Label();
             this.m_SecondPlayerName = new System.Windows.Forms.Label();
-            this.m_TextBoxPlayer = new System.Windows.Forms.TextBox();
-            this.m_TextBoxFriend = new System.Windows.Forms.TextBox();
+            this.m_TextBoxFirstPlayer = new System.Windows.Forms.TextBox();
+            this.m_TextBoxSecondPlayer = new System.Windows.Forms.TextBox();
             this.m_Against = new System.Windows.Forms.Button();
             this.m_BoardSizeLabel = new System.Windows.Forms.Label();
             this.m_BoardSizeButton = new System.Windows.Forms.Button();
@@ -56,19 +56,19 @@ namespace UIManager
             // 
             // m_TextBoxPlayer
             // 
-            this.m_TextBoxPlayer.Location = new System.Drawing.Point(206, 33);
-            this.m_TextBoxPlayer.Name = "m_TextBoxPlayer";
-            this.m_TextBoxPlayer.Size = new System.Drawing.Size(204, 26);
-            this.m_TextBoxPlayer.TabIndex = 2;
+            this.m_TextBoxFirstPlayer.Location = new System.Drawing.Point(206, 33);
+            this.m_TextBoxFirstPlayer.Name = "m_TextBoxFirstPlayer";
+            this.m_TextBoxFirstPlayer.Size = new System.Drawing.Size(204, 26);
+            this.m_TextBoxFirstPlayer.TabIndex = 2;
             // 
             // m_TextBoxFriend
             // 
-            this.m_TextBoxFriend.Enabled = false;
-            this.m_TextBoxFriend.Location = new System.Drawing.Point(206, 70);
-            this.m_TextBoxFriend.Name = "m_TextBoxFriend";
-            this.m_TextBoxFriend.Size = new System.Drawing.Size(204, 26);
-            this.m_TextBoxFriend.TabIndex = 3;
-            this.m_TextBoxFriend.Text = "-computer-";
+            this.m_TextBoxSecondPlayer.Enabled = false;
+            this.m_TextBoxSecondPlayer.Location = new System.Drawing.Point(206, 70);
+            this.m_TextBoxSecondPlayer.Name = "m_TexBoxSecondPlayer";
+            this.m_TextBoxSecondPlayer.Size = new System.Drawing.Size(204, 26);
+            this.m_TextBoxSecondPlayer.TabIndex = 3;
+            this.m_TextBoxSecondPlayer.Text = "Computer";
             // 
             // m_Against
             // 
@@ -109,7 +109,7 @@ namespace UIManager
             this.m_StartButton.TabIndex = 7;
             this.m_StartButton.Text = "Start!";
             this.m_StartButton.UseVisualStyleBackColor = false;
-            this.m_StartButton.Click += new System.EventHandler(this.button1_Click);
+            this.m_StartButton.Click += new System.EventHandler(this.m_StartButton_Click);
             // 
             // Settings
             // 
@@ -118,8 +118,8 @@ namespace UIManager
             this.Controls.Add(this.m_BoardSizeButton);
             this.Controls.Add(this.m_BoardSizeLabel);
             this.Controls.Add(this.m_Against);
-            this.Controls.Add(this.m_TextBoxFriend);
-            this.Controls.Add(this.m_TextBoxPlayer);
+            this.Controls.Add(this.m_TextBoxSecondPlayer);
+            this.Controls.Add(this.m_TextBoxFirstPlayer);
             this.Controls.Add(this.m_SecondPlayerName);
             this.Controls.Add(this.m_FirstPlayerName);
             this.MaximizeBox = false;
