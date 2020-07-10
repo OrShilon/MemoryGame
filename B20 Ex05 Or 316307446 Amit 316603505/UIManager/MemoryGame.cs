@@ -59,7 +59,7 @@ namespace UIManager
                     global::MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i, j];
                     m_BoardGame.BoardGameWithButtons[i, j] = new MemoryGameButton(currentSquare);
                     m_BoardGame.BoardGameWithButtons[i, j].Click += new EventHandler(ButtonClicked);
-                    m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(100, 90);
+                    m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(80, 80);
                     m_BoardGame.BoardGameWithButtons[i, j].Name = "Card" + i + j;
                     m_BoardGame.BoardGameWithButtons[i, j].Text = string.Empty;
                     m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
@@ -104,11 +104,9 @@ namespace UIManager
             // 
             // m_CurrentPlayersTurn
             //
-            /*
-            System.Drawing.Point temp = m_BoardGame.BoardGameWithButtons[0, 3].Location;
             this.m_CurrentPlayersTurn.AutoSize = true;
             int XLocation = m_BoardGame.BoardGameWithButtons[0, 0].Location.X;
-            int YLocation = m_BoardGame.BoardGameWithButtons[3, 0].Location.Y + 20;
+            int YLocation = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, 0].Bottom + 20;
             this.m_CurrentPlayersTurn.Location = new System.Drawing.Point(XLocation, YLocation);
             this.m_CurrentPlayersTurn.Name = "m_CurrentPlayersTurn";
             this.m_CurrentPlayersTurn.Size = new System.Drawing.Size(137, 20);
@@ -139,7 +137,6 @@ namespace UIManager
             this.Controls.Add(m_CurrentPlayersTurn);
             this.Controls.Add(m_FirstPlayerScore);
             this.Controls.Add(m_SecondPlayerScore);
-            */
         }
 
         private void ButtonClicked(object sender, EventArgs e)
