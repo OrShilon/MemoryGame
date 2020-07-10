@@ -11,40 +11,53 @@ namespace UIManager
 {
     class MemoryGame : Form
     {
+        private Button button1;
         private BoardGame m_BoardGame;
+        private int m_NumOfColums;
+        private int m_NumOfRows;
+        private bool m_IsAgainstHuman;
+        private string m_FirstPlayerName;
+        private string m_SecondPlayerName;
 
 
-        public MemoryGame(int i_NumOfRows, int i_NumOfColumns, bool i_IsAgainstHuman, string i_FirstPlayerName, string i_SecondPlayerName) 
+        public MemoryGame(int i_NumOfColumns, int i_NumOfRows, bool i_IsAgainstHuman, string i_FirstPlayerName, string i_SecondPlayerName) 
         {
+            m_NumOfColums = i_NumOfColumns;
+            m_NumOfRows = i_NumOfRows;
+            m_IsAgainstHuman = i_IsAgainstHuman;
+            m_FirstPlayerName = i_FirstPlayerName;
+            m_SecondPlayerName = i_SecondPlayerName;
             InitializeComponent();
         }
         private void InitializeComponent()
         {
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // MemoryGame
             // 
             this.ClientSize = new System.Drawing.Size(747, 451);
+            this.Controls.Add(this.button1);
             this.Name = "MemoryGame";
             this.Text = "Memory Game";
             this.ResumeLayout(false);
 
-            this.InitBoard(4, 5);
+            InitBoard();
 
         }
 
-        public void InitBoard(int i_Columns, int i_Rows)
+        public void InitBoard()
         {
-            m_BoardGame = new BoardGame(i_Columns, i_Rows);
+            m_BoardGame = new BoardGame(m_NumOfColums, m_NumOfRows);
 
-            for (int i = 0; i < i_Rows; i++)
+            for (int i = 0; i < m_NumOfRows; i++)
             {
-                for (int j = 0; j < i_Columns; j++)
+                for (int j = 0; j < m_NumOfColums; j++)
                 {
                     global::MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i, j];
                     m_BoardGame.BoardGameWithButtons[i, j] = new MemoryGameButton(currentSquare);
                     m_BoardGame.BoardGameWithButtons[i, j].Click += new EventHandler(ButtonClicked);
-                    m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(114, 92);
+                    m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(101, 90);
                     m_BoardGame.BoardGameWithButtons[i, j].Name = "Card" + i + j;
                     m_BoardGame.BoardGameWithButtons[i, j].Text = string.Empty;
                     m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
