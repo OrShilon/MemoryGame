@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MemoryGame
 {
-    internal class Player
+    public class Player
     {
         private int m_Score = 0;
 

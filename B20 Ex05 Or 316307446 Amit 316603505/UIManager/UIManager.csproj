@@ -43,7 +43,7 @@
     <Compile Include="HandleSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MemoryGame.cs">
+    <Compile Include="MemoryGameWindows.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MemoryGameButton.cs">
@@ -60,8 +60,8 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MemoryGame.resx">
-      <DependentUpon>MemoryGame.cs</DependentUpon>
+    <EmbeddedResource Include="MemoryGameWindows.resx">
+      <DependentUpon>MemoryGameWindows.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>

@@ -11,7 +11,7 @@ namespace UIManager
     {
         private const string k_AgainstPlayer = "Against a Player";
         private const string k_AgainstComputer = "Against a Computer";
-        private const string k_Computer = "computer";
+        private const string k_Computer = "-computer-";
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
         private bool m_ClosedForTheFirstTime = true;
@@ -38,12 +38,12 @@ namespace UIManager
             //need to change to const
             int numOfColumns = boardSize[0] - '0';
             int numOfRows = boardSize[4] - '0';
-            string firstPlayerName = m_FirstPlayerName.Text;
-            string secondPlayerName = m_SecondPlayerName.Text;
+            string firstPlayerName = m_TextBoxFirstPlayer.Text;
+            string secondPlayerName = m_TextBoxSecondPlayer.Text;
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
             this.Close();
             m_ClosedForTheFirstTime = false;
-            MemoryGame newGame = new MemoryGame(numOfColumns, numOfRows, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
+            MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
             newGame.ShowDialog();
         }
 
@@ -78,15 +78,15 @@ namespace UIManager
         {
             m_TextBoxSecondPlayer.Enabled = !m_TextBoxSecondPlayer.Enabled;
 
-            if (m_Against.Text.Equals(k_AgainstPlayer))
-            {
-                m_Against.Text = k_AgainstComputer;
-                m_TextBoxSecondPlayer.Text = k_Computer;
-            }
-            else
+            if (m_TextBoxSecondPlayer.Enabled)
             {
                 m_Against.Text = k_AgainstPlayer;
                 m_TextBoxSecondPlayer.Text = String.Empty;
+            }
+            else
+            {
+                m_Against.Text = k_AgainstComputer;
+                m_TextBoxSecondPlayer.Text = k_Computer;
             }
 
         }

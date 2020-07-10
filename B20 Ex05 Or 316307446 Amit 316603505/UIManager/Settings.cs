@@ -9,14 +9,14 @@ namespace UIManager
 {
     public partial class Settings : Form
     {
-        private Label m_FirstPlayerName;
+        private Label m_FirstPlayerNameLabel;
+        private Label m_SecondPlayerNameLabel;
         private TextBox m_TextBoxFirstPlayer;
         private TextBox m_TextBoxSecondPlayer;
         private Button m_Against;
         private Label m_BoardSizeLabel;
         private Button m_BoardSizeButton;
         private Button m_StartButton;
-        private Label m_SecondPlayerName;
 
         public Settings()
         {
@@ -25,8 +25,8 @@ namespace UIManager
 
         private void InitializeComponent()
         {
-            this.m_FirstPlayerName = new System.Windows.Forms.Label();
-            this.m_SecondPlayerName = new System.Windows.Forms.Label();
+            this.m_FirstPlayerNameLabel = new System.Windows.Forms.Label();
+            this.m_SecondPlayerNameLabel = new System.Windows.Forms.Label();
             this.m_TextBoxFirstPlayer = new System.Windows.Forms.TextBox();
             this.m_TextBoxSecondPlayer = new System.Windows.Forms.TextBox();
             this.m_Against = new System.Windows.Forms.Button();
@@ -37,23 +37,23 @@ namespace UIManager
             // 
             // m_FirstPlayerName
             // 
-            this.m_FirstPlayerName.AutoSize = true;
-            this.m_FirstPlayerName.Location = new System.Drawing.Point(31, 33);
-            this.m_FirstPlayerName.Name = "m_FirstPlayerName";
-            this.m_FirstPlayerName.Size = new System.Drawing.Size(137, 20);
-            this.m_FirstPlayerName.TabIndex = 0;
-            this.m_FirstPlayerName.Text = "First Player Name:";
-            this.m_FirstPlayerName.Click += new System.EventHandler(this.FirstPlayerNameLabel_Click);
+            this.m_FirstPlayerNameLabel.AutoSize = true;
+            this.m_FirstPlayerNameLabel.Location = new System.Drawing.Point(31, 33);
+            this.m_FirstPlayerNameLabel.Name = "m_FirstPlayerName";
+            this.m_FirstPlayerNameLabel.Size = new System.Drawing.Size(137, 20);
+            this.m_FirstPlayerNameLabel.TabIndex = 0;
+            this.m_FirstPlayerNameLabel.Text = "First Player Name:";
+            this.m_FirstPlayerNameLabel.Click += new System.EventHandler(this.FirstPlayerNameLabel_Click);
             // 
             // m_SecondPlayerName
             // 
-            this.m_SecondPlayerName.AutoSize = true;
-            this.m_SecondPlayerName.Location = new System.Drawing.Point(31, 70);
-            this.m_SecondPlayerName.Name = "m_SecondPlayerName";
-            this.m_SecondPlayerName.Size = new System.Drawing.Size(161, 20);
-            this.m_SecondPlayerName.TabIndex = 1;
-            this.m_SecondPlayerName.Text = "Second Player Name:";
-            this.m_SecondPlayerName.Click += new System.EventHandler(this.SecondPlayerNameLabel_Click);
+            this.m_SecondPlayerNameLabel.AutoSize = true;
+            this.m_SecondPlayerNameLabel.Location = new System.Drawing.Point(31, 70);
+            this.m_SecondPlayerNameLabel.Name = "m_SecondPlayerName";
+            this.m_SecondPlayerNameLabel.Size = new System.Drawing.Size(161, 20);
+            this.m_SecondPlayerNameLabel.TabIndex = 1;
+            this.m_SecondPlayerNameLabel.Text = "Second Player Name:";
+            this.m_SecondPlayerNameLabel.Click += new System.EventHandler(this.SecondPlayerNameLabel_Click);
             // 
             // m_TextBoxFirstPlayer
             // 
@@ -69,7 +69,7 @@ namespace UIManager
             this.m_TextBoxSecondPlayer.Name = "m_TextBoxSecondPlayer";
             this.m_TextBoxSecondPlayer.Size = new System.Drawing.Size(204, 26);
             this.m_TextBoxSecondPlayer.TabIndex = 3;
-            this.m_TextBoxSecondPlayer.Text = "Computer";
+            this.m_TextBoxSecondPlayer.Text = "-computer-";
             // 
             // m_Against
             // 
@@ -121,8 +121,8 @@ namespace UIManager
             this.Controls.Add(this.m_Against);
             this.Controls.Add(this.m_TextBoxSecondPlayer);
             this.Controls.Add(this.m_TextBoxFirstPlayer);
-            this.Controls.Add(this.m_SecondPlayerName);
-            this.Controls.Add(this.m_FirstPlayerName);
+            this.Controls.Add(this.m_SecondPlayerNameLabel);
+            this.Controls.Add(this.m_FirstPlayerNameLabel);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Settings";
