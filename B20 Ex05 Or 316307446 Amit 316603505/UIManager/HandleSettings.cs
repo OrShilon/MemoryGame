@@ -41,6 +41,7 @@ namespace UIManager
             string secondPlayerName = m_SecondPlayerName.Text;
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
             new MemoryGame(numOfColumns, numOfRows, isSecondPlayerHuman, firstPlayerName, secondPlayerName);
+            Console.WriteLine();
         }
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
