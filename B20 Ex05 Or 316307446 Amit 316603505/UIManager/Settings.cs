@@ -22,6 +22,7 @@ namespace UIManager
         {
             InitializeComponent();
         }
+
         private void InitializeComponent()
         {
             this.m_FirstPlayerName = new System.Windows.Forms.Label();
@@ -42,7 +43,7 @@ namespace UIManager
             this.m_FirstPlayerName.Size = new System.Drawing.Size(137, 20);
             this.m_FirstPlayerName.TabIndex = 0;
             this.m_FirstPlayerName.Text = "First Player Name:";
-            this.m_FirstPlayerName.Click += new System.EventHandler(this.label1_Click);
+            this.m_FirstPlayerName.Click += new System.EventHandler(this.FirstPlayerNameLabel_Click);
             // 
             // m_SecondPlayerName
             // 
@@ -52,20 +53,20 @@ namespace UIManager
             this.m_SecondPlayerName.Size = new System.Drawing.Size(161, 20);
             this.m_SecondPlayerName.TabIndex = 1;
             this.m_SecondPlayerName.Text = "Second Player Name:";
-            this.m_SecondPlayerName.Click += new System.EventHandler(this.label2_Click);
+            this.m_SecondPlayerName.Click += new System.EventHandler(this.SecondPlayerNameLabel_Click);
             // 
-            // m_TextBoxPlayer
+            // m_TextBoxFirstPlayer
             // 
             this.m_TextBoxFirstPlayer.Location = new System.Drawing.Point(206, 33);
             this.m_TextBoxFirstPlayer.Name = "m_TextBoxFirstPlayer";
             this.m_TextBoxFirstPlayer.Size = new System.Drawing.Size(204, 26);
             this.m_TextBoxFirstPlayer.TabIndex = 2;
             // 
-            // m_TextBoxFriend
+            // m_TextBoxSecondPlayer
             // 
             this.m_TextBoxSecondPlayer.Enabled = false;
             this.m_TextBoxSecondPlayer.Location = new System.Drawing.Point(206, 70);
-            this.m_TextBoxSecondPlayer.Name = "m_TexBoxSecondPlayer";
+            this.m_TextBoxSecondPlayer.Name = "m_TextBoxSecondPlayer";
             this.m_TextBoxSecondPlayer.Size = new System.Drawing.Size(204, 26);
             this.m_TextBoxSecondPlayer.TabIndex = 3;
             this.m_TextBoxSecondPlayer.Text = "Computer";
@@ -126,7 +127,7 @@ namespace UIManager
             this.MinimizeBox = false;
             this.Name = "Settings";
             this.Text = "Memory game - Settings";
-            this.Load += new System.EventHandler(this.Settings_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Settings_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
