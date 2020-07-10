@@ -37,12 +37,6 @@ namespace MemoryGame
             {
                 m_SecondPlayer = new Player("Computer", !v_VsHumanOrComputer);
             }
-
-            //InputManager.BoardSize(out s_NumOfRows, out s_NumOfColumns);
-            //s_BoardGame = new BoardGame(s_NumOfRows, s_NumOfColumns);
-            //s_ManageComputerTurns = new ComputerManager(s_NumOfRows, s_NumOfColumns);
-            //GenerateAvailableMoves();
-            //s_PointsLeftUntilFinish = (s_NumOfRows * s_NumOfColumns) / k_LettersInPair;
         }
 
         public static void InitializeBoardSize()
