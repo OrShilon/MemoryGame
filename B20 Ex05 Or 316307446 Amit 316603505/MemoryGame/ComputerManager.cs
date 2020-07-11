@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace MemoryGame
 {
 
-    internal class ComputerManager
+    public class ComputerManager
     {
         internal const int k_BottomSpotedLetterBound = 'G'; // Bottom boundary for letters to guess in the board game.
         private SpottedLetters[] smartGuess; // Location 0 represent 'G', location 1 represent 'H', location 2 represent 'I', and so on..
 
         public ComputerManager(int i_NumOfRows, int i_NumOfColumns)
         {
-            smartGuess = new SpottedLetters[i_NumOfRows * i_NumOfColumns / gameManager.k_LettersInPair];
+            smartGuess = new SpottedLetters[i_NumOfRows * i_NumOfColumns / GameManager.k_LettersInPair];
             generateSpottedLetters();
         }
 
@@ -44,7 +44,7 @@ namespace MemoryGame
 
         public void KnownLetters(string i_SquareGuessed, BoardGame i_BoardGame)
         {
-            char letterGuessed = i_BoardGame.m_SuqaresValue[i_SquareGuessed[1] - gameManager.k_BottomnumbersBound, i_SquareGuessed[0] - gameManager.k_BottomLetersBound].letter;
+            char letterGuessed = i_BoardGame.m_SuqaresValue[i_SquareGuessed[1] - GameManager.k_BottomnumbersBound, i_SquareGuessed[0] - GameManager.k_BottomLetersBound].letter;
             int index = letterGuessed - k_BottomSpotedLetterBound;
 
             if (!smartGuess[index].SeenBoth)
