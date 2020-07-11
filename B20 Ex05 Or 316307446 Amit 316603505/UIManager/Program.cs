@@ -15,7 +15,6 @@ namespace UIManager
             //temp.ShowDialog();
             Settings temp = new Settings();
             temp.ShowDialog();
-
         }
     }
 }

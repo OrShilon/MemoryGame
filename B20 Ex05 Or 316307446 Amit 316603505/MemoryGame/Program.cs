@@ -10,16 +10,6 @@ namespace MemoryGame
     {
         public static void Main(string[] args)
         {
-            gameManager.InitializePlayers();
-            gameManager.InitializeBoardSize();
-            gameManager.StartGame();
-            while (InputManager.PlayAgain())
-            {
-                gameManager.InitializeBoardSize();
-                gameManager.StartGame();
-            }
-
-            InputManager.ExitProgram();
         }
     }
 }
