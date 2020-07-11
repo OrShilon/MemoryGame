@@ -16,17 +16,6 @@ namespace UIManager
         private int m_BoardSizePositionInList = 0;
         private bool m_ClosedForTheFirstTime = true;
 
-
-        private void FirstPlayerNameLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SecondPlayerNameLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Settings_Load(object sender, EventArgs e)
         {
 
