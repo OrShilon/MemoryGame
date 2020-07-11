@@ -152,9 +152,9 @@ namespace MemoryGame
                 char numberChosen = i_PlayerMove[1];
                 char letterChosen = i_PlayerMove[0];
 
-                if (letterChosen < (gameManager.k_BottomLetersBound + i_NumOfColumns) && letterChosen >= gameManager.k_BottomLetersBound)
+                if (letterChosen < (GameManager.k_BottomLetersBound + i_NumOfColumns) && letterChosen >= GameManager.k_BottomLetersBound)
                 {
-                    if (numberChosen < (gameManager.k_BottomnumbersBound + i_NumOfRows) && numberChosen >= gameManager.k_BottomnumbersBound)
+                    if (numberChosen < (GameManager.k_BottomnumbersBound + i_NumOfRows) && numberChosen >= GameManager.k_BottomnumbersBound)
                     {
                         if (i_AvailableMoves.Contains(i_PlayerMove))
                         {

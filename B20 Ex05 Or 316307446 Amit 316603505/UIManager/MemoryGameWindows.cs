@@ -1,4 +1,4 @@
-﻿using Logic;
+﻿using MemoryGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace UIManager
     {
         private const int k_ColumsOffset = 17; // When choosing (for example) square A1, then this offset will make the coice of columns to be A insted of '0'
         private const int k_RowOffset = 1; // Same as column offset, but for the rows
-        private BoardGame m_BoardGame;
+        private BoardGameWindows m_BoardGame;
         private Label m_FirstPlayerScore;
         private Label m_SecondPlayerScore;
         private Label m_CurrentPlayersTurn;
@@ -43,6 +43,7 @@ namespace UIManager
             s_PointsLeftUntilFinish = (m_NumOfColums * m_NumOfRows) / k_LettersInPair;
             InitializeComponent();
             CreateBoard();
+            GameManager.StartGame(m_NumOfRows, m_NumOfColums);
         }
         private void InitializeComponent()
         {
@@ -61,7 +62,7 @@ namespace UIManager
 
         public void CreateBoard()
         {
-            m_BoardGame = new BoardGame(m_NumOfColums, m_NumOfRows);
+            m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
             int columnIndex;
             int rowIndex;
 
@@ -214,6 +215,8 @@ namespace UIManager
             MemoryGameButton thisButton = sender as MemoryGameButton;
 
             thisButton.Text = thisButton.Square.letter.ToString();
+            thisButton.Enabled = false;
+            changeSeenLetters(thisButton);
             thisButton.Refresh();
             if (m_IsGuessNumberOne)
             {
@@ -223,7 +226,7 @@ namespace UIManager
             else
             {
                 m_SecondButtonGeuss = thisButton;
-                if(MemoryGame.gameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? m_FirstPlayer : m_SecondPlayer))
+                if(GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? m_FirstPlayer : m_SecondPlayer))
                 {
                     m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                     m_SecondButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
@@ -236,10 +239,27 @@ namespace UIManager
                     m_SecondButtonGeuss.Text = string.Empty;
                     m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
                     changeCurrentPlayerLabel();
+                    doWhenIncorrectGuess();
                 }
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
                 checkForComputerTurn();
+
             }
+        }
+
+        private void changeSeenLetters(MemoryGameButton i_ChosenButton)
+        {
+            GameManager.s_AvailbleMoves.Remove(i_ChosenButton.Name);
+            GameManager.s_ManageComputerTurns.KnownLetters(i_ChosenButton.Name, m_BoardGame.BoardGameWithSquares);
+            i_ChosenButton.Enabled = false;
+        }
+
+        private void doWhenIncorrectGuess()
+        {
+            m_FirstButtonGeuss.Enabled = true;
+            m_SecondButtonGeuss.Enabled = true;
+            GameManager.s_AvailbleMoves.Add(m_FirstButtonGeuss.Name);
+            GameManager.s_AvailbleMoves.Add(m_SecondButtonGeuss.Name);
         }
 
         private void changeScoreText()
@@ -282,9 +302,9 @@ namespace UIManager
             string firstSquareGuess;
             string secondSquareGuess;
 
-            MemoryGame.gameManager.makeComputerTurn(out firstSquareGuess, out secondSquareGuess);
-            m_FirstButtonGeuss = m_BoardGame.BoardGameWithButtons[firstSquareGuess[0] - MemoryGame.gameManager.k_BottomLetersBound, firstSquareGuess[1] - MemoryGame.gameManager.k_BottomnumbersBound];
-            m_SecondButtonGeuss = m_BoardGame.BoardGameWithButtons[secondSquareGuess[0] - MemoryGame.gameManager.k_BottomLetersBound, secondSquareGuess[1] - MemoryGame.gameManager.k_BottomnumbersBound];
+            MemoryGame.GameManager.makeComputerTurn(out firstSquareGuess, out secondSquareGuess);
+            m_FirstButtonGeuss = m_BoardGame.BoardGameWithButtons[firstSquareGuess[0] - MemoryGame.GameManager.k_BottomLetersBound, firstSquareGuess[1] - MemoryGame.GameManager.k_BottomnumbersBound];
+            m_SecondButtonGeuss = m_BoardGame.BoardGameWithButtons[secondSquareGuess[0] - MemoryGame.GameManager.k_BottomLetersBound, secondSquareGuess[1] - MemoryGame.GameManager.k_BottomnumbersBound];
             m_FirstButtonGeuss.PerformClick();
             Thread.Sleep(1000);
             m_SecondButtonGeuss.PerformClick();
