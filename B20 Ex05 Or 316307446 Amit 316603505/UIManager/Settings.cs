@@ -35,25 +35,23 @@ namespace UIManager
             this.m_StartButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // m_FirstPlayerName
+            // m_FirstPlayerNameLabel
             // 
             this.m_FirstPlayerNameLabel.AutoSize = true;
             this.m_FirstPlayerNameLabel.Location = new System.Drawing.Point(31, 33);
-            this.m_FirstPlayerNameLabel.Name = "m_FirstPlayerName";
+            this.m_FirstPlayerNameLabel.Name = "m_FirstPlayerNameLabel";
             this.m_FirstPlayerNameLabel.Size = new System.Drawing.Size(137, 20);
             this.m_FirstPlayerNameLabel.TabIndex = 0;
             this.m_FirstPlayerNameLabel.Text = "First Player Name:";
-            this.m_FirstPlayerNameLabel.Click += new System.EventHandler(this.FirstPlayerNameLabel_Click);
             // 
-            // m_SecondPlayerName
+            // m_SecondPlayerNameLabel
             // 
             this.m_SecondPlayerNameLabel.AutoSize = true;
             this.m_SecondPlayerNameLabel.Location = new System.Drawing.Point(31, 70);
-            this.m_SecondPlayerNameLabel.Name = "m_SecondPlayerName";
+            this.m_SecondPlayerNameLabel.Name = "m_SecondPlayerNameLabel";
             this.m_SecondPlayerNameLabel.Size = new System.Drawing.Size(161, 20);
             this.m_SecondPlayerNameLabel.TabIndex = 1;
             this.m_SecondPlayerNameLabel.Text = "Second Player Name:";
-            this.m_SecondPlayerNameLabel.Click += new System.EventHandler(this.SecondPlayerNameLabel_Click);
             // 
             // m_TextBoxFirstPlayer
             // 

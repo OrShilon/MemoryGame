@@ -127,11 +127,11 @@ namespace UIManager
             this.m_FirstPlayerScore.Size = new System.Drawing.Size(137, 20);
             this.m_FirstPlayerScore.TabIndex = 0;
             this.m_FirstPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.m_FirstPlayerScore.Text = this.m_FirstPlayer.Name + " " + this.m_FirstPlayer.Score + " Pairs";
+            this.m_FirstPlayerScore.Text = this.m_FirstPlayer.Name + ": " + this.m_FirstPlayer.Score + (this.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
             // 
             // m_SecondPlayerScore
-            // 
+            //
             this.m_SecondPlayerScore.AutoSize = true;
             int XLocationSecond = m_FirstPlayerScore.Location.X;
             int YLocationSecond = m_FirstPlayerScore.Bottom + 10;
@@ -140,7 +140,7 @@ namespace UIManager
             this.m_SecondPlayerScore.Size = new System.Drawing.Size(137, 20);
             this.m_SecondPlayerScore.TabIndex = 0;
             this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + " " + this.m_SecondPlayer.Score + " Pairs";
+            this.m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + ": " + this.m_SecondPlayer.Score + (this.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
             this.Controls.Add(m_CurrentPlayersTurn);
             this.Controls.Add(m_FirstPlayerScore);

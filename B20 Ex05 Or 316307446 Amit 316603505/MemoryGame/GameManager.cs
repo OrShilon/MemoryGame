@@ -47,7 +47,6 @@ namespace MemoryGame
             GenerateAvailableMoves();
             s_PointsLeftUntilFinish = (s_NumOfRows * s_NumOfColumns) / k_LettersInPair;
         }
-
         public static void StartGame()
         {
             bool isFirstPlayerTurn = true;
