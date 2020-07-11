@@ -130,7 +130,6 @@ namespace UIManager
             this.m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.m_CurrentPlayersTurn.Text = "Current Player: " + this.m_FirstPlayer.Name;
 
-
             // 
             // m_FirstPlayerScore
             // 
@@ -157,6 +156,7 @@ namespace UIManager
             this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + ": " + this.m_SecondPlayer.Score + (this.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
+            // add labels to form
             this.Controls.Add(m_CurrentPlayersTurn);
             this.Controls.Add(m_FirstPlayerScore);
             this.Controls.Add(m_SecondPlayerScore);
@@ -214,6 +214,7 @@ namespace UIManager
             MemoryGameButton thisButton = sender as MemoryGameButton;
 
             thisButton.Text = thisButton.Square.letter.ToString();
+            thisButton.Refresh();
             if (m_IsGuessNumberOne)
             {
                 m_FirstButtonGeuss = thisButton;
@@ -222,10 +223,11 @@ namespace UIManager
             else
             {
                 m_SecondButtonGeuss = thisButton;
-                if(MemoryGame.gameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares   , m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? m_FirstPlayer : m_SecondPlayer))
+                if(MemoryGame.gameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? m_FirstPlayer : m_SecondPlayer))
                 {
                     m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                     m_SecondButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
+                    changeScoreText();
                 }
                 else
                 {
@@ -233,9 +235,36 @@ namespace UIManager
                     m_FirstButtonGeuss.Text = string.Empty;
                     m_SecondButtonGeuss.Text = string.Empty;
                     m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
+                    changeCurrentPlayerLabel();
                 }
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
                 checkForComputerTurn();
+            }
+        }
+
+        private void changeScoreText()
+        {
+            if(m_IsFirstPlayerTurn)
+            {
+                m_FirstPlayerScore.Text = this.m_FirstPlayer.Name + ": " + this.m_FirstPlayer.Score + (this.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            }
+            else
+            {
+                m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + ": " + this.m_SecondPlayer.Score + (this.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            }
+        }
+
+        private void changeCurrentPlayerLabel()
+        {
+            if (m_IsFirstPlayerTurn)
+            {
+                m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+                m_CurrentPlayersTurn.Text = "Current Player: " + this.m_FirstPlayer.Name;
+            }
+            else
+            {
+                m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+                m_CurrentPlayersTurn.Text = "Current Player: " + this.m_SecondPlayer.Name;
             }
         }
 
