@@ -24,34 +24,29 @@ namespace UIManager
         private Label m_CurrentPlayersTurn;
         private int m_NumOfColums;
         private int m_NumOfRows;
-        private bool m_IsAgainstHuman;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
         private const bool k_HumanPlayer = true; // Use to create first player, that is always human
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
         private static int s_PointsLeftUntilFinish;
-        MemoryGame.Player m_FirstPlayer;
-        MemoryGame.Player m_SecondPlayer;
         private MemoryGameButton m_FirstButtonGeuss;
         private MemoryGameButton m_SecondButtonGeuss;
         private bool m_IsGuessNumberOne = true;
-        private bool m_IsCorrectGuess;
         private Image[] m_GameImages;
 
 
-        public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, bool i_IsAgainstHuman, string i_FirstPlayerName, string i_SecondPlayerName)
+        public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
         {
             m_NumOfColums = i_NumOfColumns;
             m_NumOfRows = i_NumOfRows;
-            m_IsAgainstHuman = i_IsAgainstHuman;
-            m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
-            m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
+            GameManager.m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
+            GameManager.m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
             s_PointsLeftUntilFinish = (m_NumOfColums * m_NumOfRows) / k_LettersInPair;
             m_GameImages = new Image[s_PointsLeftUntilFinish];
             InitializeComponent();
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
             CreateBoard();
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            GameManager.StartGame(m_NumOfRows, m_NumOfColums);
+            GameManager.StartGame(m_NumOfRows, m_NumOfColums, i_FirstPlayerName, i_SecondPlayerName, i_IsAgainstHuman);
         }
 
         private void InitializeComponent()
@@ -144,7 +139,7 @@ namespace UIManager
             this.m_CurrentPlayersTurn.Size = new System.Drawing.Size(137, 20);
             this.m_CurrentPlayersTurn.TabIndex = 0;
             this.m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.m_CurrentPlayersTurn.Text = "Current Player: " + this.m_FirstPlayer.Name;
+            this.m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
 
             // 
             // m_FirstPlayerScore
@@ -157,7 +152,7 @@ namespace UIManager
             this.m_FirstPlayerScore.Size = new System.Drawing.Size(137, 20);
             this.m_FirstPlayerScore.TabIndex = 0;
             this.m_FirstPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.m_FirstPlayerScore.Text = this.m_FirstPlayer.Name + ": " + this.m_FirstPlayer.Score + (this.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            this.m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
             // 
             // m_SecondPlayerScore
@@ -170,7 +165,7 @@ namespace UIManager
             this.m_SecondPlayerScore.Size = new System.Drawing.Size(137, 20);
             this.m_SecondPlayerScore.TabIndex = 0;
             this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + ": " + this.m_SecondPlayer.Score + (this.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            this.m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
             // add labels to form
             this.Controls.Add(m_CurrentPlayersTurn);
@@ -184,50 +179,8 @@ namespace UIManager
             this.ClientSize = new System.Drawing.Size(XWindowSize, YWindowSize);
         }
 
-        private void manageGame()
-        {
-            const int k_EndOfTheGame = 0;
-            string firstSquareGuess = m_FirstButtonGeuss.Text;
-            string secondSqureGuess;
-
-           /* if (m_IsFirstPlayerTurn)
-            {
-                //first player turn
-                    
-                m_FirstButtonGeuss = m_BoardGame.BoardGameWithButtons[m_FirstSquareGuessed[0] - MemoryGame.gameManager.k_BottomLetersBound, m_FirstSquareGuessed[1] - MemoryGame.gameManager.k_BottomnumbersBound];
-                m_SecondButtonGeuss = m_BoardGame.BoardGameWithButtons[m_SecundSquareGuessed[0] - MemoryGame.gameManager.k_BottomLetersBound, m_SecundSquareGuessed[1] - MemoryGame.gameManager.k_BottomnumbersBound];
-            }
-            else if (m_IsAgainstHuman)
-            {
-                //second player turn and he is human
-                m_FirstButtonGeuss = m_BoardGame.BoardGameWithButtons[m_FirstSquareGuessed[0] - MemoryGame.gameManager.k_BottomLetersBound, m_FirstSquareGuessed[1] - MemoryGame.gameManager.k_BottomnumbersBound];
-                m_SecondButtonGeuss = m_BoardGame.BoardGameWithButtons[m_SecundSquareGuessed[0] - MemoryGame.gameManager.k_BottomLetersBound, m_SecundSquareGuessed[1] - MemoryGame.gameManager.k_BottomnumbersBound];
-            }*/
-
-
-
-                /* makeTurn(out firstSquareGuessed, out secundSquareGuessed, isFirstPlayerTurn, isGuessNumberOne);
-                 if (isCorrectGuess(firstSquareGuessed, secundSquareGuessed))
-                 {
-                     Thread.Sleep(1000);
-                     increaseScore(isFirstPlayerTurn);
-                     s_PointsLeftUntilFinish--;
-                     s_AvailbleMoves.Remove(firstSquareGuessed);
-                     s_AvailbleMoves.Remove(secundSquareGuessed);
-                 }
-                 else
-                 {
-                     Thread.Sleep(1000);
-                     s_AvailbleMoves.Add(firstSquareGuessed);
-                     s_BoardGame.m_SuqaresValue[firstSquareGuessed[1] - k_BottomnumbersBound, firstSquareGuessed[0] - k_BottomLetersBound].visible = false;
-                     s_BoardGame.m_SuqaresValue[secundSquareGuessed[1] - k_BottomnumbersBound, secundSquareGuessed[0] - k_BottomLetersBound].visible = false;
-                     isFirstPlayerTurn = !isFirstPlayerTurn;
-                 }*/
-        }
-
         private void ButtonClicked(object sender, EventArgs e)
         {
-
             // make this buttn a global button!
             MemoryGameButton thisButton = sender as MemoryGameButton;
 
@@ -244,7 +197,7 @@ namespace UIManager
             else
             {
                 m_SecondButtonGeuss = thisButton;
-                if(GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? m_FirstPlayer : m_SecondPlayer))
+                if(GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer))
                 {
                     m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                     m_SecondButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
@@ -292,11 +245,11 @@ namespace UIManager
         {
             if(m_IsFirstPlayerTurn)
             {
-                m_FirstPlayerScore.Text = this.m_FirstPlayer.Name + ": " + this.m_FirstPlayer.Score + (this.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
             }
             else
             {
-                m_SecondPlayerScore.Text = this.m_SecondPlayer.Name + ": " + this.m_SecondPlayer.Score + (this.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
             }
         }
 
@@ -305,25 +258,25 @@ namespace UIManager
             if (m_IsFirstPlayerTurn)
             {
                 m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-                m_CurrentPlayersTurn.Text = "Current Player: " + this.m_FirstPlayer.Name;
+                m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
             }
             else
             {
                 m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-                m_CurrentPlayersTurn.Text = "Current Player: " + this.m_SecondPlayer.Name;
+                m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_SecondPlayer.Name;
             }
         }
 
         private void gameFinishedDialog()
         {
             string winner;
-            if(m_FirstPlayer.Score > m_SecondPlayer.Score)
+            if (GameManager.m_FirstPlayer.Score > GameManager.m_SecondPlayer.Score)
             {
-                winner = m_FirstPlayer.Name + " won the game!";
+                winner = GameManager.m_FirstPlayer.Name + " won the game!";
             }
-            else if(m_FirstPlayer.Score < m_SecondPlayer.Score)
+            else if (GameManager.m_FirstPlayer.Score < GameManager.m_SecondPlayer.Score)
             {
-                winner = m_SecondPlayer.Name + " won the game!";
+                winner = GameManager.m_SecondPlayer.Name + " won the game!";
             }
             else
             {
@@ -345,7 +298,7 @@ namespace UIManager
         {
 
             //need to change 0 to const
-            if(!m_IsFirstPlayerTurn && !m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
+            if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
             {
                 doComputerTurn();
             }
@@ -386,10 +339,10 @@ namespace UIManager
         {
             Controls.Clear();
             InitializeComponent();
-            m_FirstPlayer.Score = 0;
-            m_SecondPlayer.Score = 0;
+            GameManager.m_FirstPlayer.Score = 0;
+            GameManager.m_SecondPlayer.Score = 0;
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
-            GameManager.StartGame(m_NumOfRows, m_NumOfColums);
+            GameManager.StartGame(m_NumOfRows, m_NumOfColums, GameManager.m_FirstPlayer.Name, GameManager.m_SecondPlayer.Name, GameManager.m_SecondPlayer.isHumanPlayer);
             CreateBoard();
         }
     }
