@@ -32,6 +32,7 @@ namespace UIManager
         private MemoryGameButton m_SecondButtonGeuss;
         private bool m_IsGuessNumberOne = true;
         private Image[] m_GameImages;
+        MemoryGameButton m_ClickedButton;
 
 
         public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
@@ -173,6 +174,7 @@ namespace UIManager
 
             // Set windows size
             // Need to change to const
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + 12;
             int YWindowSize = m_SecondPlayerScore.Bottom + 12;
             this.ClientSize = new System.Drawing.Size(XWindowSize, YWindowSize);
@@ -180,36 +182,35 @@ namespace UIManager
 
         private void ButtonClicked(object sender, EventArgs e)
         {
-            // make this buttn a global button!
-            MemoryGameButton thisButton = sender as MemoryGameButton;
+            m_ClickedButton = sender as MemoryGameButton;
             //thisButton.Text = thisButton.Square.letter.ToString();
-            thisButton.Image = thisButton.ButtonImage;
-            thisButton.Click -= ButtonClicked;
-            changeSeenLetters(thisButton);
-            thisButton.Refresh();
+            m_ClickedButton.Image = m_ClickedButton.ButtonImage;
+            m_ClickedButton.Click -= ButtonClicked;
+            changeKnownLettersForComputer(m_ClickedButton);
+            m_ClickedButton.Refresh();
             if (m_IsGuessNumberOne)
             {
-                m_FirstButtonGeuss = thisButton;
+                m_FirstButtonGeuss = m_ClickedButton;
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
             }
             else
             {
-                m_SecondButtonGeuss = thisButton;
+                m_SecondButtonGeuss = m_ClickedButton;
                 if(GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer))
                 {
                     m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
-                    m_SecondButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
+                    m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
                     changeScoreText();
+                    if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
+                    {
+                        Thread.Sleep(1000);
+                    }
                 }
                 else
                 {
-                    Thread.Sleep(1500);
+                        Thread.Sleep(1500);
                     //m_FirstButtonGeuss.Text = string.Empty;
                     //m_SecondButtonGeuss.Text = string.Empty;
-                    m_FirstButtonGeuss.Image = null;
-                    m_SecondButtonGeuss.Image = null;
-                    m_FirstButtonGeuss.Click += ButtonClicked;
-                    m_SecondButtonGeuss.Click += ButtonClicked;
                     m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
                     changeCurrentPlayerLabel();
                     doWhenIncorrectGuess();
@@ -223,12 +224,15 @@ namespace UIManager
                 }
                 else
                 {
+                    m_FirstButtonGeuss.Refresh();
+                    m_SecondButtonGeuss.Refresh();
+                    m_CurrentPlayersTurn.Refresh();
                     checkForComputerTurn();
                 }
             }
         }
 
-        private void changeSeenLetters(MemoryGameButton i_ChosenButton)
+        private void changeKnownLettersForComputer(MemoryGameButton i_ChosenButton)
         {
             GameManager.s_AvailbleMoves.Remove(i_ChosenButton.Name);
             GameManager.s_ManageComputerTurns.KnownLetters(i_ChosenButton.Name, m_BoardGame.BoardGameWithSquares);
@@ -237,8 +241,10 @@ namespace UIManager
 
         private void doWhenIncorrectGuess()
         {
-            m_FirstButtonGeuss.Enabled = true;
-            m_SecondButtonGeuss.Enabled = true;
+            m_FirstButtonGeuss.Image = null;
+            m_SecondButtonGeuss.Image = null;
+            m_FirstButtonGeuss.Click += ButtonClicked;
+            m_SecondButtonGeuss.Click += ButtonClicked;
             GameManager.s_AvailbleMoves.Add(m_FirstButtonGeuss.Name);
             GameManager.s_AvailbleMoves.Add(m_SecondButtonGeuss.Name);
         }
@@ -248,10 +254,12 @@ namespace UIManager
             if(m_IsFirstPlayerTurn)
             {
                 m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_FirstPlayerScore.Refresh();
             }
             else
             {
                 m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_SecondPlayerScore.Refresh();
             }
         }
 
@@ -298,7 +306,6 @@ namespace UIManager
 
         private void checkForComputerTurn()
         {
-
             //need to change 0 to const
             if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
             {
@@ -311,6 +318,8 @@ namespace UIManager
             // disable all buttons becouse it is computer turn......
             string firstGuess;
             string secondGuess;
+            //bool firstOneClicked = false;
+            //bool secondOneClicked = false;
             GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
 
             foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
@@ -319,14 +328,20 @@ namespace UIManager
                 {
                     button.PerformClick();
                     Thread.Sleep(1500);
+                    //firstOneClicked = true;
                 }
 
                 if (secondGuess.Equals(button.Name))
                 {
                     button.PerformClick();
                     Thread.Sleep(1500);
-
+                    //secondOneClicked = true;
                 }
+
+                //if(!firstOneClicked.Equals(secondOneClicked))
+                //{
+                //    Thread.Sleep(1500);
+                //}
 
                 // need to break after we find both buttons!!
             }
