@@ -55,7 +55,6 @@ namespace UIManager
             // 
             // MemoryGame
             // 
-            //this.ClientSize = new System.Drawing.Size(747, 451);
             this.Name = "MemoryGame";
             this.Text = "Memory Game";
             this.ResumeLayout(false);
@@ -183,10 +182,9 @@ namespace UIManager
         {
             // make this buttn a global button!
             MemoryGameButton thisButton = sender as MemoryGameButton;
-
-            thisButton.Text = thisButton.Square.letter.ToString();
+            //thisButton.Text = thisButton.Square.letter.ToString();
             thisButton.Image = thisButton.ButtonImage;
-            thisButton.Enabled = false;
+            thisButton.Click -= ButtonClicked;
             changeSeenLetters(thisButton);
             thisButton.Refresh();
             if (m_IsGuessNumberOne)
@@ -206,8 +204,12 @@ namespace UIManager
                 else
                 {
                     Thread.Sleep(1500);
-                    m_FirstButtonGeuss.Text = string.Empty;
-                    m_SecondButtonGeuss.Text = string.Empty;
+                    //m_FirstButtonGeuss.Text = string.Empty;
+                    //m_SecondButtonGeuss.Text = string.Empty;
+                    m_FirstButtonGeuss.Image = null;
+                    m_SecondButtonGeuss.Image = null;
+                    m_FirstButtonGeuss.Click += ButtonClicked;
+                    m_SecondButtonGeuss.Click += ButtonClicked;
                     m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
                     changeCurrentPlayerLabel();
                     doWhenIncorrectGuess();
@@ -230,7 +232,7 @@ namespace UIManager
         {
             GameManager.s_AvailbleMoves.Remove(i_ChosenButton.Name);
             GameManager.s_ManageComputerTurns.KnownLetters(i_ChosenButton.Name, m_BoardGame.BoardGameWithSquares);
-            i_ChosenButton.Enabled = false;
+            //i_ChosenButton.Enabled = false;
         }
 
         private void doWhenIncorrectGuess()

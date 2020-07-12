@@ -17,7 +17,6 @@ namespace UIManager
             base()
         {
             m_Button = i_SquareInBoardGame;
-
             //מיצי לא בדק שזה טוב, צריך לבדוק את זה
             m_image = i_image[(int)(Convert.ToChar(m_Button.letter) - 'G')];
 
