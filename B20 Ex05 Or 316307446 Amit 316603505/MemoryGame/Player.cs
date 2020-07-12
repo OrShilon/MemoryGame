@@ -29,7 +29,7 @@ namespace MemoryGame
 
             set
             {
-                m_Score++;
+                m_Score = value;
             }
         }
     }

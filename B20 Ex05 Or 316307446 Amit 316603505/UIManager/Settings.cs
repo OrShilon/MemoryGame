@@ -21,6 +21,7 @@ namespace UIManager
         public Settings()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
         }
 
         private void InitializeComponent()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,16 @@ namespace UIManager
     class MemoryGameButton : Button
     {
         private MemoryGame.Square m_Button;
+        private Image m_image;
 
-        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame) :
+        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame, Image[] i_image) :
             base()
         {
             m_Button = i_SquareInBoardGame;
+
+            //מיצי לא בדק שזה טוב, צריך לבדוק את זה
+            m_image = i_image[(int)(Convert.ToChar(m_Button.letter) - 'G')];
+
         }
 
         public MemoryGame.Square Square
@@ -22,6 +28,13 @@ namespace UIManager
             get
             {
                 return m_Button;
+            }
+        }
+        public Image ButtonImage
+        {
+            get
+            {
+                return m_image;
             }
         }
     }
