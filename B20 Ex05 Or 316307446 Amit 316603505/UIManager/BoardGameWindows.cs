@@ -10,6 +10,7 @@ namespace UIManager
     {
         private MemoryGame.BoardGame m_BoardGameLogic;
         private MemoryGameButton[,] m_BoardGameButtons;
+
         public BoardGameWindows(int i_NumOfColumns, int i_NumOfRows)
         {
             m_BoardGameLogic = new MemoryGame.BoardGame(i_NumOfRows, i_NumOfColumns);

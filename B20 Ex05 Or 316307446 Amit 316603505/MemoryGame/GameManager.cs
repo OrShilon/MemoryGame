@@ -25,26 +25,26 @@ namespace MemoryGame
         public static void StartGame(int i_NumOfRows, int i_NumOfColumns)
         {
             s_ManageComputerTurns = new ComputerManager(i_NumOfRows, i_NumOfColumns);
+            s_NumOfColumns = i_NumOfColumns;
+            s_NumOfRows = i_NumOfRows;
             GenerateAvailableMoves();
         }
 
-        public static void makeComputerTurn(out string i_FirstSquareGuessed, out string i_SecondSquareGuessed)
+        public static void makeComputerTurn(out string i_FirstSquareGuessed, out string i_SecondSquareGuessed, BoardGame i_BoardGame)
         {
             bool firstGuessWasSmart = false;
             bool isGuessNumberOne = true;
             char unusedLetter = 'a';
 
-            computerRestMode();
-            i_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart); // ununsedLetter will make the method MakeGuesses
-            s_ManageComputerTurns.KnownLetters(i_FirstSquareGuessed, s_BoardGame);
+            i_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart, i_BoardGame); // ununsedLetter will make the method MakeGuesses
+            s_ManageComputerTurns.KnownLetters(i_FirstSquareGuessed, i_BoardGame);
             s_AvailbleMoves.Remove(i_FirstSquareGuessed);
-            computerRestMode();
-            char firstLetterGuessed = s_BoardGame.m_SuqaresValue[i_FirstSquareGuessed[1] - k_BottomnumbersBound, i_FirstSquareGuessed[0] - k_BottomLetersBound].letter;
-            i_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart);
-            s_ManageComputerTurns.KnownLetters(i_SecondSquareGuessed, s_BoardGame);
+            char firstLetterGuessed = i_BoardGame.m_SuqaresValue[i_FirstSquareGuessed[1] - k_BottomnumbersBound, i_FirstSquareGuessed[0] - k_BottomLetersBound].letter;
+            i_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart, i_BoardGame);
+            s_ManageComputerTurns.KnownLetters(i_SecondSquareGuessed, i_BoardGame);
         }
 
-        private static string makeGuesses(bool i_IsGuessNumberOne, char i_FirstLetterGuessed, ref bool io_FirstGuessWasSmart)
+        private static string makeGuesses(bool i_IsGuessNumberOne, char i_FirstLetterGuessed, ref bool io_FirstGuessWasSmart, BoardGame i_BoardGame)
         {
             string nextMove;
             rand = new Random();
@@ -57,17 +57,17 @@ namespace MemoryGame
                     nextMove = s_ManageComputerTurns.SmartMove(i_FirstLetterGuessed, i_IsGuessNumberOne, s_AvailbleMoves);
                     io_FirstGuessWasSmart = true;
                 }
-                else
+            else
                 {
                     nextMove = s_ManageComputerTurns.GenerateRandomMove(s_AvailbleMoves);
                 }
-                /*
-            else
-            {
-                nextMove = InputManager.MakeHumanGuess(i_IsFirstPlayerTurn, i_IsGuessNumberOne, m_FirstPlayer, m_SecondPlayer, s_NumOfRows, s_NumOfColumns, s_AvailbleMoves);
-            }*/
+            /*
+        else
+        {
+            nextMove = InputManager.MakeHumanGuess(i_IsFirstPlayerTurn, i_IsGuessNumberOne, m_FirstPlayer, m_SecondPlayer, s_NumOfRows, s_NumOfColumns, s_AvailbleMoves);
+        }*/
 
-            s_BoardGame.m_SuqaresValue[nextMove[1] - k_BottomnumbersBound, nextMove[0] - k_BottomLetersBound].visible = true;
+            i_BoardGame.m_SuqaresValue[nextMove[1] - k_BottomnumbersBound, nextMove[0] - k_BottomLetersBound].visible = true;
 
             return nextMove;
         }
