@@ -13,8 +13,9 @@ namespace MemoryGame
         public const int k_BottomLetersBound = 'A'; // Bottom boundary index for board columns.
         public const int k_BottomnumbersBound = '1'; // Bottom boundary index for board rows.
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
-        private static Player m_FirstPlayer;
-        private static Player m_SecondPlayer;
+        private const bool k_HumanPlayer = true; // first player is always human
+        public static Player m_FirstPlayer;
+        public static Player m_SecondPlayer;
         private static int s_NumOfRows;
         private static int s_NumOfColumns;
         private static BoardGame s_BoardGame;
@@ -22,9 +23,11 @@ namespace MemoryGame
         public static ComputerManager s_ManageComputerTurns;
         private static Random rand;
 
-        public static void StartGame(int i_NumOfRows, int i_NumOfColumns)
+        public static void StartGame(int i_NumOfRows, int i_NumOfColumns, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
         {
             s_ManageComputerTurns = new ComputerManager(i_NumOfRows, i_NumOfColumns);
+            m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
+            m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
             s_NumOfColumns = i_NumOfColumns;
             s_NumOfRows = i_NumOfRows;
             GenerateAvailableMoves();
