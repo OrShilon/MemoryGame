@@ -9,8 +9,8 @@ namespace UIManager
 {
     public partial class Settings : Form
     {
-        private const string k_AgainstPlayer = "Against a Player";
-        private const string k_AgainstComputer = "Against a Computer";
+        private const string k_AgainstPlayer = "Against a Friend";
+        private const string k_AgainstComputer = "Against Computer";
         private const string k_Computer = "-computer-";
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
@@ -69,12 +69,12 @@ namespace UIManager
 
             if (m_TextBoxSecondPlayer.Enabled)
             {
-                m_Against.Text = k_AgainstPlayer;
+                m_Against.Text = k_AgainstComputer;
                 m_TextBoxSecondPlayer.Text = String.Empty;
             }
             else
             {
-                m_Against.Text = k_AgainstComputer;
+                m_Against.Text = k_AgainstPlayer;
                 m_TextBoxSecondPlayer.Text = k_Computer;
             }
 
