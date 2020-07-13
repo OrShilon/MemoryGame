@@ -9,7 +9,7 @@ namespace MemoryGame
 
     public class ComputerManager
     {
-        internal const int k_BottomSpotedLetterBound = 'G'; // Bottom boundary for letters to guess in the board game.
+        public const int k_BottomSpotedLetterBound = 'G'; // Bottom boundary for letters to guess in the board game.
         private SpottedLetters[] smartGuess; // Location 0 represent 'G', location 1 represent 'H', location 2 represent 'I', and so on..
         Random rand;
 
@@ -71,48 +71,62 @@ namespace MemoryGame
 
             if (i_IsFirstGuess)
             {
-                for (int i = 0; i < smartGuess.Length; i++)
-                {
-                    if (smartGuess[i].SeenBoth == true && i_AvailableMoves.Contains(smartGuess[i].LocationNumberOne))
-                    {
-                        newMove = smartGuess[i].LocationNumberOne; // incase of smart guess && seen both return first_spot
-                        break;
-                    }
-                }
-
-                if (newMove.Equals(string.Empty))
-                {
-                    newMove = GenerateRandomMove(i_AvailableMoves);
-                }
+                newMove = firstSmartMoce(i_AvailableMoves, newMove);
             }
             else
             {
-                for (int i = 0; i < smartGuess.Length; i++)
-                {
-                    if (smartGuess[i].SeenBoth)
-                    {
-                        // if smart guess and other match is known, return the matched letter
-                        // else, if smart guess and second pair has just dicovered previously
-                        if (i_FirstLetterGuessed.Equals(smartGuess[i].Letter) && i_AvailableMoves.Contains(smartGuess[i].LocationNumberTwo))
-                        {
-                            newMove = smartGuess[i].LocationNumberTwo;
-                            break;
-                        }
-                        else if (i_FirstLetterGuessed.Equals(smartGuess[i].Letter) && i_AvailableMoves.Contains(smartGuess[i].LocationNumberOne))
-                        {
-                            newMove = smartGuess[i].LocationNumberOne;
-                            break;
-                        }
-                    }
-                }
-
-                if (newMove.Equals(string.Empty))
-                {
-                    newMove = GenerateRandomMove(i_AvailableMoves);
-                }
+                newMove = secondSmartMove(i_FirstLetterGuessed, i_AvailableMoves, newMove);
             }
 
             return newMove;
+        }
+
+        private string firstSmartMoce(List<string> i_AvailableMoves, string i_FirstMove)
+        {
+            for (int i = 0; i < smartGuess.Length; i++)
+            {
+                if (smartGuess[i].SeenBoth == true && i_AvailableMoves.Contains(smartGuess[i].LocationNumberOne))
+                {
+                    i_FirstMove = smartGuess[i].LocationNumberOne; // incase of smart guess && seen both return first_spot
+                    break;
+                }
+            }
+
+            if (i_FirstMove.Equals(string.Empty))
+            {
+                i_FirstMove = GenerateRandomMove(i_AvailableMoves);
+            }
+
+            return i_FirstMove;
+        }
+
+        private string secondSmartMove(char i_FirstLetterGuessed, List<string> i_AvailableMoves, string i_SecondMove)
+        {
+            for (int i = 0; i < smartGuess.Length; i++)
+            {
+                if (smartGuess[i].SeenBoth)
+                {
+                    // if smart guess and other match is known, return the matched letter
+                    // else, if smart guess and second pair has just dicovered previously
+                    if (i_FirstLetterGuessed.Equals(smartGuess[i].Letter) && i_AvailableMoves.Contains(smartGuess[i].LocationNumberTwo))
+                    {
+                        i_SecondMove = smartGuess[i].LocationNumberTwo;
+                        break;
+                    }
+                    else if (i_FirstLetterGuessed.Equals(smartGuess[i].Letter) && i_AvailableMoves.Contains(smartGuess[i].LocationNumberOne))
+                    {
+                        i_SecondMove = smartGuess[i].LocationNumberOne;
+                        break;
+                    }
+                }
+            }
+
+            if (i_SecondMove.Equals(string.Empty))
+            {
+                i_SecondMove = GenerateRandomMove(i_AvailableMoves);
+            }
+
+            return i_SecondMove;
         }
     }
 }
