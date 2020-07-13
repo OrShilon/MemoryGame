@@ -85,6 +85,7 @@ namespace UIManager
                     m_BoardGame.BoardGameWithButtons[i, j] = new MemoryGameButton(currentSquare, m_GameImages);
                     m_BoardGame.BoardGameWithButtons[i, j].Click += new EventHandler(ButtonClicked);
                     m_BoardGame.BoardGameWithButtons[i, j].TabStop = false;
+                    m_BoardGame.BoardGameWithButtons[i, j].FlatAppearance.BorderSize = 20;                   
                     m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(80, 80);
                     columnIndex = (int)(j + '0' + k_ColumsOffset);
                     rowIndex = (int)(i + '0' + k_RowOffset);
@@ -127,6 +128,8 @@ namespace UIManager
                     }
 
                     this.Controls.Add(m_BoardGame.BoardGameWithButtons[i, j]);
+                    this.MaximizeBox = false;
+                    this.MinimizeBox = false;
                 }
             }
 
@@ -191,7 +194,7 @@ namespace UIManager
         {
             m_ClickedButton = sender as MemoryGameButton;
             //thisButton.Text = thisButton.Square.letter.ToString();
-            m_ClickedButton.Image = m_ClickedButton.ButtonImage;
+            m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
             m_ClickedButton.Click -= ButtonClicked;
             changeKnownLettersForComputer(m_ClickedButton);
             m_ClickedButton.Refresh();
@@ -215,6 +218,8 @@ namespace UIManager
             {
                 m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                 m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
+                m_FirstButtonGeuss.FlatAppearance.BorderColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
+                m_SecondButtonGeuss.FlatAppearance.BorderColor = m_FirstButtonGeuss.FlatAppearance.BorderColor;
                 changeScoreText();
                 if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
                 {
@@ -252,8 +257,8 @@ namespace UIManager
 
         private void doWhenIncorrectGuess()
         {
-            m_FirstButtonGeuss.Image = null;
-            m_SecondButtonGeuss.Image = null;
+            m_FirstButtonGeuss.BackgroundImage = null;
+            m_SecondButtonGeuss.BackgroundImage = null;
             if(!isComputerTurn)
             {
                 m_FirstButtonGeuss.Click += ButtonClicked;
@@ -304,7 +309,7 @@ namespace UIManager
 
         private void computerClick(MemoryGameButton i_ClickedButton)
         {
-            i_ClickedButton.Image = i_ClickedButton.ButtonImage;
+            i_ClickedButton.BackgroundImage = i_ClickedButton.ButtonImage;
             changeKnownLettersForComputer(i_ClickedButton);
             i_ClickedButton.Refresh();
         }

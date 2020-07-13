@@ -18,6 +18,7 @@ namespace UIManager
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
         private bool m_ClosedForTheFirstTime = true;
+
         public Settings()
         {
             InitializeComponent();
@@ -65,6 +66,7 @@ namespace UIManager
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
             m_ClosedForTheFirstTime = false;
             this.Close();
+
             MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             newGame.ShowDialog();
         }
