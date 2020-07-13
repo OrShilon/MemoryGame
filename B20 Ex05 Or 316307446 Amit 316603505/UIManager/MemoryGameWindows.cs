@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace UIManager
 {
@@ -195,40 +196,45 @@ namespace UIManager
             }
             else
             {
-                m_SecondButtonGeuss = m_ClickedButton;
-                if(GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer))
-                {
-                    m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
-                    m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
-                    changeScoreText();
-                    if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                }
-                else
-                {
-                        Thread.Sleep(1500);
-                    //m_FirstButtonGeuss.Text = string.Empty;
-                    //m_SecondButtonGeuss.Text = string.Empty;
-                    m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
-                    changeCurrentPlayerLabel();
-                    doWhenIncorrectGuess();
-                }
-                m_IsGuessNumberOne = !m_IsGuessNumberOne;
+                checkIfCurrectGuess();
+            }
+        }
 
-                // need to change to consr
-                if(GameManager.s_AvailbleMoves.Count == 0)
+        private void checkIfCurrectGuess()
+        {
+            m_SecondButtonGeuss = m_ClickedButton;
+            if (GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer))
+            {
+                m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
+                m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
+                changeScoreText();
+                if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
                 {
-                    gameFinishedDialog();
+                    Thread.Sleep(1000);
                 }
-                else
-                {
-                    m_FirstButtonGeuss.Refresh();
-                    m_SecondButtonGeuss.Refresh();
-                    m_CurrentPlayersTurn.Refresh();
-                    checkForComputerTurn();
-                }
+            }
+            else
+            {
+                Thread.Sleep(1500);
+                //m_FirstButtonGeuss.Text = string.Empty;
+                //m_SecondButtonGeuss.Text = string.Empty;
+                m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
+                changeCurrentPlayerLabel();
+                doWhenIncorrectGuess();
+            }
+            m_IsGuessNumberOne = !m_IsGuessNumberOne;
+
+            // need to change to consr
+            if (GameManager.s_AvailbleMoves.Count == 0)
+            {
+                gameFinishedDialog();
+            }
+            else
+            {
+                m_FirstButtonGeuss.Refresh();
+                m_SecondButtonGeuss.Refresh();
+                m_CurrentPlayersTurn.Refresh();
+                checkForComputerTurn();
             }
         }
 
@@ -306,10 +312,22 @@ namespace UIManager
 
         private void checkForComputerTurn()
         {
-            //need to change 0 to const
+            ////need to change 0 to const
             if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
             {
+                // This loop eliminates the possibility of pressing the card buttons in the computer's turn
+                foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
+                {
+                    button.Click -= ButtonClicked;
+                }
+
                 doComputerTurn();
+                // This loop enables to press the card buttons after the computer finished his turn
+                foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
+                {
+                    Application.DoEvents();
+                    button.Click += ButtonClicked;
+                }
             }
         }
 
@@ -318,33 +336,24 @@ namespace UIManager
             // disable all buttons becouse it is computer turn......
             string firstGuess;
             string secondGuess;
-            //bool firstOneClicked = false;
-            //bool secondOneClicked = false;
             GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
 
             foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
             {
                 if (firstGuess.Equals(button.Name))
                 {
-                    button.PerformClick();
-                    Thread.Sleep(1500);
-                    //firstOneClicked = true;
+                    m_FirstButtonGeuss = button;
                 }
 
                 if (secondGuess.Equals(button.Name))
                 {
-                    button.PerformClick();
-                    Thread.Sleep(1500);
-                    //secondOneClicked = true;
+                    m_SecondButtonGeuss = button;
                 }
-
-                //if(!firstOneClicked.Equals(secondOneClicked))
-                //{
-                //    Thread.Sleep(1500);
-                //}
-
-                // need to break after we find both buttons!!
             }
+
+            m_FirstButtonGeuss.PerformClick();
+            Thread.Sleep(1500);
+            m_SecondButtonGeuss.PerformClick();
         }
 
         private void exitProgram()
@@ -355,6 +364,7 @@ namespace UIManager
         private void restartGame()
         {
             Controls.Clear();
+            m_IsFirstPlayerTurn = true;
             InitializeComponent();
             GameManager.m_FirstPlayer.Score = 0;
             GameManager.m_SecondPlayer.Score = 0;

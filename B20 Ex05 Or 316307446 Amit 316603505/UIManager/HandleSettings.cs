@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace UIManager
 {
-    public partial class Settings : Form
+    public partial class SettingsOld : Form
     {
         private const string k_AgainstPlayer = "Against a Friend";
         private const string k_AgainstComputer = "Against Computer";

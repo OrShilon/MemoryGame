@@ -11,6 +11,7 @@ namespace MemoryGame
     {
         internal const int k_BottomSpotedLetterBound = 'G'; // Bottom boundary for letters to guess in the board game.
         private SpottedLetters[] smartGuess; // Location 0 represent 'G', location 1 represent 'H', location 2 represent 'I', and so on..
+        Random rand;
 
         public ComputerManager(int i_NumOfRows, int i_NumOfColumns)
         {
@@ -34,7 +35,7 @@ namespace MemoryGame
             {
                 const int k_startOfList = 0;
                 int endOfList = i_AvailableMoves.Count();
-                Random rand = new Random();
+                rand = new Random();
                 int moveNum = rand.Next(k_startOfList, endOfList);
                 move = i_AvailableMoves[moveNum];
             }

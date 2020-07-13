@@ -18,7 +18,6 @@ namespace MemoryGame
         public static Player m_SecondPlayer;
         private static int s_NumOfRows;
         private static int s_NumOfColumns;
-        private static BoardGame s_BoardGame;
         public static List<string> s_AvailbleMoves = new List<string>();
         public static ComputerManager s_ManageComputerTurns;
         private static Random rand;
@@ -51,8 +50,13 @@ namespace MemoryGame
         {
             string nextMove;
             rand = new Random();
-            int isSmartGuess = rand.Next(1, 3); // if we get 1, it will be smart guess. if we get 2, it will be random guess
+            int isSmartGuess = int.MaxValue;// initialize to max int value so in the second guess it will be smart / not smart, same as the first guess
             const int k_MakeSmartGuess = 1; // If RandomComputerOrSmartComputer = k_MakeSmartGuess, the computer will make a smart guess.
+
+            if (i_IsGuessNumberOne)
+            {
+                isSmartGuess = rand.Next(1, 3); // if we get 1, it will be smart guess. if we get 2, it will be random guess
+            }
 
             // checks if next move should be smart or not
             if (isSmartGuess == k_MakeSmartGuess || (!i_IsGuessNumberOne && io_FirstGuessWasSmart))
