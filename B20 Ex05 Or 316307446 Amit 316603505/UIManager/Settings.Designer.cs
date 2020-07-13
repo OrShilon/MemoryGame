@@ -128,6 +128,8 @@
             this.Controls.Add(this.m_SecondPlayerNameLabel);
             this.Controls.Add(this.m_FirstPlayerNameLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Settings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Memory Game - Settings";

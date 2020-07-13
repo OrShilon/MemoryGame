@@ -9,10 +9,10 @@ namespace UIManager
 {
     class Program
     {
-        [STAThread]
+        //[STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
+            //Application.EnableVisualStyles();
             //MemoryGame temp = new MemoryGame(4, 4, true, "amit", "or");
             //temp.ShowDialog();
             Settings temp = new Settings();
