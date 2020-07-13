@@ -28,6 +28,7 @@ namespace UIManager
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
         private const bool k_HumanPlayer = true; // Use to create first player, that is always human
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
+        private bool isComputerTurn = false;
         private static int s_PointsLeftUntilFinish;
         private MemoryGameButton m_FirstButtonGeuss;
         private MemoryGameButton m_SecondButtonGeuss;
@@ -129,6 +130,11 @@ namespace UIManager
                 }
             }
 
+            CreatePlayersLabels();
+        }
+
+        private void CreatePlayersLabels()
+        {
             // 
             // m_CurrentPlayersTurn
             //
@@ -196,14 +202,16 @@ namespace UIManager
             }
             else
             {
+                m_SecondButtonGeuss = m_ClickedButton;
                 checkIfCurrectGuess();
             }
         }
 
         private void checkIfCurrectGuess()
         {
-            m_SecondButtonGeuss = m_ClickedButton;
-            if (GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer))
+            Player currentPlayer = m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer;
+
+            if (GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, currentPlayer))
             {
                 m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                 m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
@@ -222,9 +230,13 @@ namespace UIManager
                 changeCurrentPlayerLabel();
                 doWhenIncorrectGuess();
             }
-            m_IsGuessNumberOne = !m_IsGuessNumberOne;
 
-            // need to change to consr
+            if (!isComputerTurn)
+            {
+                m_IsGuessNumberOne = !m_IsGuessNumberOne;
+            }
+
+            // need to change to const
             if (GameManager.s_AvailbleMoves.Count == 0)
             {
                 gameFinishedDialog();
@@ -238,21 +250,63 @@ namespace UIManager
             }
         }
 
-        private void changeKnownLettersForComputer(MemoryGameButton i_ChosenButton)
-        {
-            GameManager.s_AvailbleMoves.Remove(i_ChosenButton.Name);
-            GameManager.s_ManageComputerTurns.KnownLetters(i_ChosenButton.Name, m_BoardGame.BoardGameWithSquares);
-            //i_ChosenButton.Enabled = false;
-        }
-
         private void doWhenIncorrectGuess()
         {
             m_FirstButtonGeuss.Image = null;
             m_SecondButtonGeuss.Image = null;
-            m_FirstButtonGeuss.Click += ButtonClicked;
-            m_SecondButtonGeuss.Click += ButtonClicked;
+            if(!isComputerTurn)
+            {
+                m_FirstButtonGeuss.Click += ButtonClicked;
+                m_SecondButtonGeuss.Click += ButtonClicked;
+            }
+
             GameManager.s_AvailbleMoves.Add(m_FirstButtonGeuss.Name);
             GameManager.s_AvailbleMoves.Add(m_SecondButtonGeuss.Name);
+        }
+
+
+        private void checkForComputerTurn()
+        {
+            ////need to change 0 to const
+            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
+            {
+                isComputerTurn = true;
+                doComputerTurn();
+                isComputerTurn = false;
+            }
+        }
+
+        private void doComputerTurn()
+        {
+            // disable all buttons becouse it is computer turn......
+            string firstGuess;
+            string secondGuess;
+            GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
+
+            foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
+            {
+                if (firstGuess.Equals(button.Name))
+                {
+                    m_FirstButtonGeuss = button;
+                }
+
+                if (secondGuess.Equals(button.Name))
+                {
+                    m_SecondButtonGeuss = button;
+                }
+            }
+
+            computerClick(m_FirstButtonGeuss);
+            Thread.Sleep(1500);
+            computerClick(m_SecondButtonGeuss);
+            checkIfCurrectGuess();
+        }
+
+        private void computerClick(MemoryGameButton i_ClickedButton)
+        {
+            i_ClickedButton.Image = i_ClickedButton.ButtonImage;
+            changeKnownLettersForComputer(i_ClickedButton);
+            i_ClickedButton.Refresh();
         }
 
         private void changeScoreText()
@@ -267,6 +321,12 @@ namespace UIManager
                 m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
                 m_SecondPlayerScore.Refresh();
             }
+        }
+
+        private void changeKnownLettersForComputer(MemoryGameButton i_ChosenButton)
+        {
+            GameManager.s_AvailbleMoves.Remove(i_ChosenButton.Name);
+            GameManager.s_ManageComputerTurns.KnownLetters(i_ChosenButton.Name, m_BoardGame.BoardGameWithSquares);
         }
 
         private void changeCurrentPlayerLabel()
@@ -308,52 +368,6 @@ namespace UIManager
             {
                 exitProgram();
             }
-        }
-
-        private void checkForComputerTurn()
-        {
-            ////need to change 0 to const
-            if(!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
-            {
-                // This loop eliminates the possibility of pressing the card buttons in the computer's turn
-                foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
-                {
-                    button.Click -= ButtonClicked;
-                }
-
-                doComputerTurn();
-                // This loop enables to press the card buttons after the computer finished his turn
-                foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
-                {
-                    Application.DoEvents();
-                    button.Click += ButtonClicked;
-                }
-            }
-        }
-
-        private void doComputerTurn()
-        {
-            // disable all buttons becouse it is computer turn......
-            string firstGuess;
-            string secondGuess;
-            GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
-
-            foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
-            {
-                if (firstGuess.Equals(button.Name))
-                {
-                    m_FirstButtonGeuss = button;
-                }
-
-                if (secondGuess.Equals(button.Name))
-                {
-                    m_SecondButtonGeuss = button;
-                }
-            }
-
-            m_FirstButtonGeuss.PerformClick();
-            Thread.Sleep(1500);
-            m_SecondButtonGeuss.PerformClick();
         }
 
         private void exitProgram()
