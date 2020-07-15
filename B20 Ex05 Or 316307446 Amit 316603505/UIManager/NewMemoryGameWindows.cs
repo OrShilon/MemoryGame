@@ -33,7 +33,7 @@ namespace UIManager
         private MemoryGameButton m_FirstButtonGeuss;
         private MemoryGameButton m_SecondButtonGeuss;
         private Image[] m_GameImages;
-        private MemoryGameButton m_ClickedButton;
+        private MemoryGameButton m_CurrentButtonClickedByPlayer; // Onlu used by a human player
 
         public NewMemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
         {
@@ -71,7 +71,6 @@ namespace UIManager
                 for (int j = 0; j < m_NumOfColums; j++)
                 {
                     buildSquareProperties(i, j);
-                    //m_BoardGame.BoardGameWithButtons[i, j].Text = string.Empty;
                     //m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
 
                     // need to change 0 const
@@ -130,7 +129,7 @@ namespace UIManager
 
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
+            //m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new System.Drawing.Size(80, 80);
             columnIndex = (int)(i_ColumnIndex + '0' + k_ColumsOffset);
             rowIndex = (int)(i_RowIndex + '0' + k_RowOffset);
@@ -198,7 +197,12 @@ namespace UIManager
             this.Controls.Add(m_FirstPlayerScore);
             this.Controls.Add(m_SecondPlayerScore);
 
-            // Set windows size
+            // Set windows size appropriate to the buttons (x) and the second player label (y
+            setGameWindowSize();
+        }
+
+        private void setGameWindowSize()
+        {
             // Need to change to const
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + 12;
@@ -208,28 +212,28 @@ namespace UIManager
 
         private void ButtonClicked(object sender, EventArgs e)
         {
-            m_ClickedButton = sender as MemoryGameButton;
+            m_CurrentButtonClickedByPlayer = sender as MemoryGameButton;
             if(m_HasInternetConnection)
             {
-                m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
+                m_CurrentButtonClickedByPlayer.BackgroundImage = m_CurrentButtonClickedByPlayer.ButtonImage;
             }
             else
             {
-                m_ClickedButton.Text = m_ClickedButton.Square.letter.ToString();
+                m_CurrentButtonClickedByPlayer.Text = m_CurrentButtonClickedByPlayer.Square.letter.ToString();
 
             }
 
-            m_ClickedButton.Click -= ButtonClicked;
-            changeKnownLettersForComputer(m_ClickedButton);
-            m_ClickedButton.Refresh();
+            m_CurrentButtonClickedByPlayer.Click -= ButtonClicked;
+            changeKnownLettersForComputer(m_CurrentButtonClickedByPlayer);
+            m_CurrentButtonClickedByPlayer.Refresh();
             if (m_IsGuessNumberOne)
             {
-                m_FirstButtonGeuss = m_ClickedButton;
+                m_FirstButtonGeuss = m_CurrentButtonClickedByPlayer;
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
             }
             else
             {
-                m_SecondButtonGeuss = m_ClickedButton;
+                m_SecondButtonGeuss = m_CurrentButtonClickedByPlayer;
                 checkIfCurrectGuess();
             }
         }
