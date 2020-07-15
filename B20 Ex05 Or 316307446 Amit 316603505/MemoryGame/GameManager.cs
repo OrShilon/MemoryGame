@@ -50,7 +50,7 @@ namespace MemoryGame
         {
             string nextMove;
             rand = new Random();
-            int isSmartGuess = int.MaxValue;// initialize to max int value so in the second guess it will be smart / not smart, same as the first guess
+            int isSmartGuess = int.MaxValue; // Initialize to max int value so in the second guess it will be smart / not smart, depends on the first guess
             const int k_MakeSmartGuess = 1; // If RandomComputerOrSmartComputer = k_MakeSmartGuess, the computer will make a smart guess.
 
             if (i_IsGuessNumberOne)
@@ -68,23 +68,10 @@ namespace MemoryGame
                 {
                     nextMove = s_ManageComputerTurns.GenerateRandomMove(s_AvailbleMoves);
                 }
-            /*
-        else
-        {
-            nextMove = InputManager.MakeHumanGuess(i_IsFirstPlayerTurn, i_IsGuessNumberOne, m_FirstPlayer, m_SecondPlayer, s_NumOfRows, s_NumOfColumns, s_AvailbleMoves);
-        }*/
 
             i_BoardGame.m_SuqaresValue[nextMove[1] - k_BottomnumbersBound, nextMove[0] - k_BottomLetersBound].visible = true;
 
             return nextMove;
-        }
-
-        private static void computerRestMode()
-        {
-            if (!m_SecondPlayer.isHumanPlayer)
-            {
-                Thread.Sleep(1000);
-            }
         }
 
         private static void GenerateAvailableMoves()

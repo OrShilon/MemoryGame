@@ -1,102 +1,81 @@
 ﻿using MemoryGame;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 
 namespace UIManager
 {
-    class MemoryGameWindows : Form
+    public partial class NewMemoryGameWindows : Form
     {
-        private const int k_ColumsOffset = 17; // When choosing (for example) square A1, then this offset will make the coice of columns to be A insted of '0'
+        private const int k_ColumsOffset = 17; // When choosing (for example) square A1, then this offset will make the choice of columns to be A insted of '0'
         private const int k_RowOffset = 1; // Same as column offset, but for the rows
+        private const bool k_HumanPlayer = true; // Use to create first player, that is always human
+        public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
+        private int m_NumOfColums;
+        private int m_NumOfRows;
+        private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
+        private bool m_IsComputerTurn = false;
+        private bool m_IsGuessNumberOne = true;
+        private bool m_HasInternetConnection;
         private BoardGameWindows m_BoardGame;
         private Label m_FirstPlayerScore;
         private Label m_SecondPlayerScore;
         private Label m_CurrentPlayersTurn;
-        private int m_NumOfColums;
-        private int m_NumOfRows;
-        private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
-        private const bool k_HumanPlayer = true; // Use to create first player, that is always human
-        public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
-        private bool isComputerTurn = false;
-        private static int s_PointsLeftUntilFinish;
         private MemoryGameButton m_FirstButtonGeuss;
         private MemoryGameButton m_SecondButtonGeuss;
-        private bool m_IsGuessNumberOne = true;
         private Image[] m_GameImages;
-        MemoryGameButton m_ClickedButton;
+        private MemoryGameButton m_ClickedButton;
 
-
-        public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
+        public NewMemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
         {
             m_NumOfColums = i_NumOfColumns;
             m_NumOfRows = i_NumOfRows;
             GameManager.m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
             GameManager.m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
-            s_PointsLeftUntilFinish = (m_NumOfColums * m_NumOfRows) / k_LettersInPair;
-            m_GameImages = new Image[s_PointsLeftUntilFinish];
-            InitializeComponent();
+            m_GameImages = new Image[(m_NumOfColums * m_NumOfRows) / k_LettersInPair]; // the number of images need is the number of (rows * number of columns) / 2
+            InitializeComponents();
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
             CreateBoard();
-            this.FormBorderStyle = FormBorderStyle.FixedDialog;
             GameManager.StartGame(m_NumOfRows, m_NumOfColums, i_FirstPlayerName, i_SecondPlayerName, i_IsAgainstHuman);
-        }
-
-        private void InitializeComponent()
-        {
-            //this.SuspendLayout();
-            // 
-            // MemoryGame
-            // 
-            this.Name = "MemoryGame";
-            this.Text = "Memory Game";
-            this.ResumeLayout(false);
-            this.m_CurrentPlayersTurn = new System.Windows.Forms.Label();
-            this.m_FirstPlayerScore = new System.Windows.Forms.Label();
-            this.m_SecondPlayerScore = new System.Windows.Forms.Label();
         }
 
         public void CreateBoard()
         {
-            int columnIndex;
-            int rowIndex;
             WebClient w = new WebClient();
 
-            for (int i = 0; i < m_GameImages.Length; i++)
+            try
             {
-                m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
+                for (int i = 0; i < m_GameImages.Length; i++)
+                {
+                    m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
+                }
+
+                m_HasInternetConnection = true;
+            }
+            catch(Exception we)
+            {
+                m_HasInternetConnection = false;
             }
 
             for (int i = 0; i < m_NumOfRows; i++)
             {
                 for (int j = 0; j < m_NumOfColums; j++)
                 {
-                    MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i, j];
-
-                    // להעביר לממורי גיים בוטום תמונה ספציפית ולא כל פעם את המערך של התמונות!!!!
-                    m_BoardGame.BoardGameWithButtons[i, j] = new MemoryGameButton(currentSquare, m_GameImages);
-                    m_BoardGame.BoardGameWithButtons[i, j].Click += new EventHandler(ButtonClicked);
-                    m_BoardGame.BoardGameWithButtons[i, j].TabStop = false;
-                    m_BoardGame.BoardGameWithButtons[i, j].FlatAppearance.BorderSize = 20;                   
-                    m_BoardGame.BoardGameWithButtons[i, j].Size = new System.Drawing.Size(80, 80);
-                    columnIndex = (int)(j + '0' + k_ColumsOffset);
-                    rowIndex = (int)(i + '0' + k_RowOffset);
-                    m_BoardGame.BoardGameWithButtons[i, j].Name = Convert.ToChar(columnIndex).ToString() + Convert.ToChar(rowIndex).ToString();
-                    Console.WriteLine(m_BoardGame.BoardGameWithButtons[i, j].Name);
-                    m_BoardGame.BoardGameWithButtons[i, j].Text = string.Empty;
-                    m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
+                    buildSquareProperties(i, j);
+                    //m_BoardGame.BoardGameWithButtons[i, j].Text = string.Empty;
+                    //m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
 
                     // need to change 0 const
+                    // First Square
                     if (i == 0 && j == 0)
                     {
                         m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(12, 12);
@@ -107,42 +86,81 @@ namespace UIManager
                         // need to change 0 const
                         if (i == 0)
                         {
-                            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i, j - 1].Location.X + m_BoardGame.BoardGameWithButtons[i, j].Right + 12;
-                            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i, j - 1].Location.Y;
-                            m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+                            constractFirstRow(i, j);
                         }
                         else
                         {
                             // need to change 0 const
                             if (j == 0)
                             {
-                                int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i - 1, j].Location.X;
-                                int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i - 1, j].Location.Y + m_BoardGame.BoardGameWithButtons[i, j].Bottom + 12;
-                                m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+                                constractFirstColumn(i, j);
                             }
                             else
                             {
-                                int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i, j - 1].Location.X + m_BoardGame.BoardGameWithButtons[i, j].Right + 12;
-                                int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i - 1, j].Location.Y + m_BoardGame.BoardGameWithButtons[i, j].Bottom + 12;
-                                m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+                                constractMiddleSquares(i, j);
                             }
                         }
                     }
 
                     this.Controls.Add(m_BoardGame.BoardGameWithButtons[i, j]);
-                    this.MaximizeBox = false;
-                    this.MinimizeBox = false;
                 }
             }
 
             CreatePlayersLabels();
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        }
+
+        private void buildSquareProperties(int i_RowIndex, int i_ColumnIndex)
+        {
+            int columnIndex;
+            int rowIndex;
+            MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i_RowIndex, i_ColumnIndex];
+
+            if(m_HasInternetConnection)
+            {
+                // להעביר לממורי גיים בוטום תמונה ספציפית ולא כל פעם את המערך של התמונות!!!!
+                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare, m_GameImages);
+            }
+            else
+            {
+                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare);
+            }
+
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new System.Drawing.Size(80, 80);
+            columnIndex = (int)(i_ColumnIndex + '0' + k_ColumsOffset);
+            rowIndex = (int)(i_RowIndex + '0' + k_RowOffset);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Name = Convert.ToChar(columnIndex).ToString() + Convert.ToChar(rowIndex).ToString();
+        }
+
+        private void constractFirstRow(int i_RowIndex, int i_ColumnIndex)
+        {
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + 12;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.Y;
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+        }
+
+        private void constractFirstColumn(int i_RowIndex, int i_ColumnIndex)
+        {
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.X;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + 12;
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+        }
+
+        private void constractMiddleSquares(int i, int j)
+        {
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i, j - 1].Location.X + m_BoardGame.BoardGameWithButtons[i, j].Right + 12;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i - 1, j].Location.Y + m_BoardGame.BoardGameWithButtons[i, j].Bottom + 12;
+            m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
         }
 
         private void CreatePlayersLabels()
         {
-            // 
             // m_CurrentPlayersTurn
-            //
             this.m_CurrentPlayersTurn.AutoSize = true;
             int XLocationCurrent = m_BoardGame.BoardGameWithButtons[0, 0].Location.X;
             int YLocationCurrent = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, 0].Bottom + 10;
@@ -153,9 +171,7 @@ namespace UIManager
             this.m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
 
-            // 
             // m_FirstPlayerScore
-            // 
             this.m_FirstPlayerScore.AutoSize = true;
             int XLocationFirst = m_CurrentPlayersTurn.Location.X;
             int YLocationFirst = m_CurrentPlayersTurn.Bottom + 10;
@@ -166,9 +182,7 @@ namespace UIManager
             this.m_FirstPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
 
-            // 
             // m_SecondPlayerScore
-            //
             this.m_SecondPlayerScore.AutoSize = true;
             int XLocationSecond = m_FirstPlayerScore.Location.X;
             int YLocationSecond = m_FirstPlayerScore.Bottom + 10;
@@ -195,8 +209,16 @@ namespace UIManager
         private void ButtonClicked(object sender, EventArgs e)
         {
             m_ClickedButton = sender as MemoryGameButton;
-            //thisButton.Text = thisButton.Square.letter.ToString();
-            m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
+            if(m_HasInternetConnection)
+            {
+                m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
+            }
+            else
+            {
+                m_ClickedButton.Text = m_ClickedButton.Square.letter.ToString();
+
+            }
+
             m_ClickedButton.Click -= ButtonClicked;
             changeKnownLettersForComputer(m_ClickedButton);
             m_ClickedButton.Refresh();
@@ -220,8 +242,6 @@ namespace UIManager
             {
                 m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                 m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
-                m_FirstButtonGeuss.FlatAppearance.BorderColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
-                m_SecondButtonGeuss.FlatAppearance.BorderColor = m_FirstButtonGeuss.FlatAppearance.BorderColor;
                 changeScoreText();
                 if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
                 {
@@ -231,14 +251,12 @@ namespace UIManager
             else
             {
                 Thread.Sleep(1500);
-                //m_FirstButtonGeuss.Text = string.Empty;
-                //m_SecondButtonGeuss.Text = string.Empty;
                 m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
                 changeCurrentPlayerLabel();
                 doWhenIncorrectGuess();
             }
 
-            if (!isComputerTurn)
+            if (!m_IsComputerTurn)
             {
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
             }
@@ -259,9 +277,18 @@ namespace UIManager
 
         private void doWhenIncorrectGuess()
         {
-            m_FirstButtonGeuss.BackgroundImage = null;
-            m_SecondButtonGeuss.BackgroundImage = null;
-            if(!isComputerTurn)
+            if (m_HasInternetConnection)
+            {
+                m_FirstButtonGeuss.BackgroundImage = null;
+                m_SecondButtonGeuss.BackgroundImage = null;
+            }
+            else
+            {
+                m_FirstButtonGeuss.Text = string.Empty;
+                m_SecondButtonGeuss.Text = string.Empty;
+            }
+
+            if (!m_IsComputerTurn)
             {
                 m_FirstButtonGeuss.Click += ButtonClicked;
                 m_SecondButtonGeuss.Click += ButtonClicked;
@@ -277,15 +304,14 @@ namespace UIManager
             ////need to change 0 to const
             if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
             {
-                isComputerTurn = true;
+                m_IsComputerTurn = true;
                 doComputerTurn();
-                isComputerTurn = false;
+                m_IsComputerTurn = false;
             }
         }
 
         private void doComputerTurn()
         {
-            // disable all buttons becouse it is computer turn......
             string firstGuess;
             string secondGuess;
             GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
@@ -311,14 +337,23 @@ namespace UIManager
 
         private void computerClick(MemoryGameButton i_ClickedButton)
         {
-            i_ClickedButton.BackgroundImage = i_ClickedButton.ButtonImage;
+            if (m_HasInternetConnection)
+            {
+                i_ClickedButton.BackgroundImage = i_ClickedButton.ButtonImage;
+            }
+            else
+            {
+                i_ClickedButton.Text = i_ClickedButton.Square.letter.ToString();
+
+            }
+
             changeKnownLettersForComputer(i_ClickedButton);
             i_ClickedButton.Refresh();
         }
 
         private void changeScoreText()
         {
-            if(m_IsFirstPlayerTurn)
+            if (m_IsFirstPlayerTurn)
             {
                 m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
                 m_FirstPlayerScore.Refresh();
@@ -353,6 +388,7 @@ namespace UIManager
         private void gameFinishedDialog()
         {
             string winner;
+
             if (GameManager.m_FirstPlayer.Score > GameManager.m_SecondPlayer.Score)
             {
                 winner = GameManager.m_FirstPlayer.Name + " won the game!";
@@ -365,9 +401,9 @@ namespace UIManager
             {
                 winner = "Its a tie!";
             }
-            DialogResult anotherRound = MessageBox.Show(winner + Environment.NewLine + "Do you want to play another round?","Memory Game", MessageBoxButtons.YesNo);
 
-            if(anotherRound == DialogResult.Yes)
+            DialogResult anotherRound = MessageBox.Show(winner + Environment.NewLine + "Do you want to play another round?", "Memory Game", MessageBoxButtons.YesNo);
+            if (anotherRound == DialogResult.Yes)
             {
                 restartGame();
             }
@@ -386,7 +422,7 @@ namespace UIManager
         {
             Controls.Clear();
             m_IsFirstPlayerTurn = true;
-            InitializeComponent();
+            InitializeComponents();
             GameManager.m_FirstPlayer.Score = 0;
             GameManager.m_SecondPlayer.Score = 0;
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);

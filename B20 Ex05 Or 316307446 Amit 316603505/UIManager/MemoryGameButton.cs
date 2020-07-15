@@ -10,15 +10,21 @@ namespace UIManager
 {
     class MemoryGameButton : Button
     {
-        private MemoryGame.Square m_Button;
-        private Image m_image;
+        private readonly MemoryGame.Square m_Button;
+        private readonly Image m_image;
 
         public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame, Image[] i_image) :
             base()
         {
             m_Button = i_SquareInBoardGame;
-            //מיצי לא בדק שזה טוב, צריך לבדוק את זה
-            m_image = i_image[(int)(Convert.ToChar(m_Button.letter) - 'G')];
+            m_image = i_image[(int)(Convert.ToChar(m_Button.letter) - MemoryGame.ComputerManager.k_BottomSpotedLetterBound)];
+
+        }
+
+        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame) :
+            base()
+        {
+            m_Button = i_SquareInBoardGame;
 
         }
 

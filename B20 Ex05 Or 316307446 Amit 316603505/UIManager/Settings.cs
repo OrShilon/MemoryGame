@@ -67,7 +67,10 @@ namespace UIManager
             m_ClosedForTheFirstTime = false;
             this.Close();
 
-            MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
+            //MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
+            //newGame.ShowDialog();
+
+            NewMemoryGameWindows newGame = new NewMemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             newGame.ShowDialog();
         }
 
