@@ -21,6 +21,13 @@ namespace UIManager
 
         }
 
+        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame) :
+            base()
+        {
+            m_Button = i_SquareInBoardGame;
+
+        }
+
         public MemoryGame.Square Square
         {
             get

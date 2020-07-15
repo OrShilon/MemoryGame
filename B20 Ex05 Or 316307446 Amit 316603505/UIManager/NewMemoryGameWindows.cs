@@ -23,8 +23,9 @@ namespace UIManager
         private int m_NumOfColums;
         private int m_NumOfRows;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
-        private bool isComputerTurn = false;
+        private bool m_IsComputerTurn = false;
         private bool m_IsGuessNumberOne = true;
+        private bool m_HasInternetConnection;
         private BoardGameWindows m_BoardGame;
         private Label m_FirstPlayerScore;
         private Label m_SecondPlayerScore;
@@ -51,9 +52,18 @@ namespace UIManager
         {
             WebClient w = new WebClient();
 
-            for (int i = 0; i < m_GameImages.Length; i++)
+            try
             {
-                m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
+                for (int i = 0; i < m_GameImages.Length; i++)
+                {
+                    m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
+                }
+
+                m_HasInternetConnection = true;
+            }
+            catch(Exception we)
+            {
+                m_HasInternetConnection = false;
             }
 
             for (int i = 0; i < m_NumOfRows; i++)
@@ -108,8 +118,16 @@ namespace UIManager
             int rowIndex;
             MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i_RowIndex, i_ColumnIndex];
 
-            // להעביר לממורי גיים בוטום תמונה ספציפית ולא כל פעם את המערך של התמונות!!!!
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare, m_GameImages);
+            if(m_HasInternetConnection)
+            {
+                // להעביר לממורי גיים בוטום תמונה ספציפית ולא כל פעם את המערך של התמונות!!!!
+                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare, m_GameImages);
+            }
+            else
+            {
+                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare);
+            }
+
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
@@ -191,8 +209,16 @@ namespace UIManager
         private void ButtonClicked(object sender, EventArgs e)
         {
             m_ClickedButton = sender as MemoryGameButton;
-            //thisButton.Text = thisButton.Square.letter.ToString();
-            m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
+            if(m_HasInternetConnection)
+            {
+                m_ClickedButton.BackgroundImage = m_ClickedButton.ButtonImage;
+            }
+            else
+            {
+                m_ClickedButton.Text = m_ClickedButton.Square.letter.ToString();
+
+            }
+
             m_ClickedButton.Click -= ButtonClicked;
             changeKnownLettersForComputer(m_ClickedButton);
             m_ClickedButton.Refresh();
@@ -225,14 +251,12 @@ namespace UIManager
             else
             {
                 Thread.Sleep(1500);
-                //m_FirstButtonGeuss.Text = string.Empty;
-                //m_SecondButtonGeuss.Text = string.Empty;
                 m_IsFirstPlayerTurn = !m_IsFirstPlayerTurn;
                 changeCurrentPlayerLabel();
                 doWhenIncorrectGuess();
             }
 
-            if (!isComputerTurn)
+            if (!m_IsComputerTurn)
             {
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
             }
@@ -253,9 +277,18 @@ namespace UIManager
 
         private void doWhenIncorrectGuess()
         {
-            m_FirstButtonGeuss.BackgroundImage = null;
-            m_SecondButtonGeuss.BackgroundImage = null;
-            if (!isComputerTurn)
+            if (m_HasInternetConnection)
+            {
+                m_FirstButtonGeuss.BackgroundImage = null;
+                m_SecondButtonGeuss.BackgroundImage = null;
+            }
+            else
+            {
+                m_FirstButtonGeuss.Text = string.Empty;
+                m_SecondButtonGeuss.Text = string.Empty;
+            }
+
+            if (!m_IsComputerTurn)
             {
                 m_FirstButtonGeuss.Click += ButtonClicked;
                 m_SecondButtonGeuss.Click += ButtonClicked;
@@ -271,9 +304,9 @@ namespace UIManager
             ////need to change 0 to const
             if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
             {
-                isComputerTurn = true;
+                m_IsComputerTurn = true;
                 doComputerTurn();
-                isComputerTurn = false;
+                m_IsComputerTurn = false;
             }
         }
 
@@ -304,7 +337,16 @@ namespace UIManager
 
         private void computerClick(MemoryGameButton i_ClickedButton)
         {
-            i_ClickedButton.BackgroundImage = i_ClickedButton.ButtonImage;
+            if (m_HasInternetConnection)
+            {
+                i_ClickedButton.BackgroundImage = i_ClickedButton.ButtonImage;
+            }
+            else
+            {
+                i_ClickedButton.Text = i_ClickedButton.Square.letter.ToString();
+
+            }
+
             changeKnownLettersForComputer(i_ClickedButton);
             i_ClickedButton.Refresh();
         }
