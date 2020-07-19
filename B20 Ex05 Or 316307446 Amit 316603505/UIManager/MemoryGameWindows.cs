@@ -245,12 +245,12 @@ namespace UIManager
         {
             Player currentPlayer = m_IsFirstPlayerTurn ? GameManager.m_FirstPlayer : GameManager.m_SecondPlayer;
 
-            if (GameManager.isCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, currentPlayer))
+            if (GameManager.IsCorrectGuess(m_BoardGame.BoardGameWithSquares, m_FirstButtonGeuss.Name, m_SecondButtonGeuss.Name, currentPlayer))
             {
                 m_FirstButtonGeuss.BackColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
                 m_SecondButtonGeuss.BackColor = m_FirstButtonGeuss.BackColor;
                 changeScoreText();
-                if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer)
+                if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.IsHumanPlayer)
                 {
                     Thread.Sleep(1000);
                 }
@@ -431,7 +431,7 @@ namespace UIManager
             GameManager.m_FirstPlayer.Score = 0;
             GameManager.m_SecondPlayer.Score = 0;
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
-            GameManager.StartGame(m_NumOfRows, m_NumOfColums, GameManager.m_FirstPlayer.Name, GameManager.m_SecondPlayer.Name, GameManager.m_SecondPlayer.isHumanPlayer);
+            GameManager.StartGame(m_NumOfRows, m_NumOfColums, GameManager.m_FirstPlayer.Name, GameManager.m_SecondPlayer.Name, GameManager.m_SecondPlayer.IsHumanPlayer);
             CreateBoard();
         }
     }

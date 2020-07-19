@@ -8,18 +8,18 @@ namespace MemoryGame
 {
     public class Square
     {
-        private char letterInSquare;
+        private char m_LetterInSquare;
 
         public Square(char i_Letter)
         {
-            this.letterInSquare = i_Letter;
+            this.m_LetterInSquare = i_Letter;
         }
 
         public char letter
         {
             get
             {
-                return this.letterInSquare;
+                return this.m_LetterInSquare;
             }
 
             set

@@ -13,7 +13,7 @@ namespace MemoryGame
         public const int k_BottomLetersBound = 'A'; // Bottom boundary index for board columns.
         public const int k_BottomnumbersBound = '1'; // Bottom boundary index for board rows.
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
-        private const bool k_HumanPlayer = true; // first player is always human
+        private const bool v_HumanPlayer = true; // first player is always human
         public static Player m_FirstPlayer;
         public static Player m_SecondPlayer;
         private static int s_NumOfRows;
@@ -25,25 +25,25 @@ namespace MemoryGame
         public static void StartGame(int i_NumOfRows, int i_NumOfColumns, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
         {
             s_ManageComputerTurns = new ComputerManager(i_NumOfRows, i_NumOfColumns);
-            m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
+            m_FirstPlayer = new Player(i_FirstPlayerName, v_HumanPlayer);
             m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
             s_NumOfColumns = i_NumOfColumns;
             s_NumOfRows = i_NumOfRows;
-            GenerateAvailableMoves();
+            generateAvailableMoves();
         }
 
-        public static void makeComputerTurn(out string i_FirstSquareGuessed, out string i_SecondSquareGuessed, BoardGame i_BoardGame)
+        public static void makeComputerTurn(out string o_FirstSquareGuessed, out string o_SecondSquareGuessed, BoardGame i_BoardGame)
         {
             bool firstGuessWasSmart = false;
             bool isGuessNumberOne = true;
             char unusedLetter = 'a';
 
-            i_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart, i_BoardGame); // ununsedLetter will make the method MakeGuesses
-            s_ManageComputerTurns.KnownLetters(i_FirstSquareGuessed, i_BoardGame);
-            s_AvailbleMoves.Remove(i_FirstSquareGuessed);
-            char firstLetterGuessed = i_BoardGame.m_SuqaresValue[i_FirstSquareGuessed[1] - k_BottomnumbersBound, i_FirstSquareGuessed[0] - k_BottomLetersBound].letter;
-            i_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart, i_BoardGame);
-            s_ManageComputerTurns.KnownLetters(i_SecondSquareGuessed, i_BoardGame);
+            o_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart, i_BoardGame); // ununsedLetter will make the method MakeGuesses
+            s_ManageComputerTurns.KnownLetters(o_FirstSquareGuessed, i_BoardGame);
+            s_AvailbleMoves.Remove(o_FirstSquareGuessed);
+            char firstLetterGuessed = i_BoardGame.m_SuqaresValue[o_FirstSquareGuessed[1] - k_BottomnumbersBound, o_FirstSquareGuessed[0] - k_BottomLetersBound].letter;
+            o_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart, i_BoardGame);
+            s_ManageComputerTurns.KnownLetters(o_SecondSquareGuessed, i_BoardGame);
         }
 
         private static string makeGuesses(bool i_IsGuessNumberOne, char i_FirstLetterGuessed, ref bool io_FirstGuessWasSmart, BoardGame i_BoardGame)
@@ -74,7 +74,7 @@ namespace MemoryGame
             return nextMove;
         }
 
-        private static void GenerateAvailableMoves()
+        private static void generateAvailableMoves()
         {
             for (int i = 0; i < s_NumOfColumns; i++)
             {
@@ -87,7 +87,7 @@ namespace MemoryGame
             }
         }
 
-        public static bool isCorrectGuess(BoardGame i_BoardGame, string i_FirstGuess, string i_SecondGuess, Player io_Player)
+        public static bool IsCorrectGuess(BoardGame i_BoardGame, string i_FirstGuess, string i_SecondGuess, Player io_Player)
         {
             Square firstGuess = i_BoardGame.m_SuqaresValue[i_FirstGuess[1] - k_BottomnumbersBound, i_FirstGuess[0] - k_BottomLetersBound];
             Square secondGuess = i_BoardGame.m_SuqaresValue[i_SecondGuess[1] - k_BottomnumbersBound, i_SecondGuess[0] - k_BottomLetersBound];
