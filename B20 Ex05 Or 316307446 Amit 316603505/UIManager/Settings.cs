@@ -36,7 +36,7 @@ namespace UIManager
             if (m_TextBoxSecondPlayer.Enabled)
             {
                 m_AgainstFriendOrComputer.Text = k_AgainstComputer;
-                m_TextBoxSecondPlayer.Text = String.Empty;
+                m_TextBoxSecondPlayer.Text = string.Empty;
             }
             else
             {
@@ -70,7 +70,6 @@ namespace UIManager
             m_ClosedForTheFirstTime = false;
             this.Hide();
             this.Close();
-
             MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             newGame.ShowDialog();
         }
