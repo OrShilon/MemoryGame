@@ -18,9 +18,16 @@ namespace UIManager
     {
         private const int k_ColumsOffset = 17; // When choosing (for example) square A1, then this offset will make the choice of columns to be A insted of '0'
         private const int k_RowOffset = 1; // Same as column offset, but for the rows
-        private const bool k_HumanPlayer = true; // Use to create first player, that is always human
+        private const bool v_HumanPlayer = true; // Use to create first player, that is always human
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
         private const int k_FirstRowOrColumn = 0; // This const is to check whether we are trying to build a square from the first row / column
+        private const int k_BuildSquareOffset = 1; // When constructing a sqaure we need to build it proportional to the previous square and the square above. This offset access them.  
+        private const int k_SpaceBetweenSquares = 12; // Fixed space between each square.
+        private const int k_SpaceBetweenWindowToButtons = 12; // Fixed space between window to buttons.
+        private const int k_SpaceBetweenPlayerLabels = 10; // Fixed space between each label of players.
+        private const int k_IsMultiple = 2; // When a player has zero or single pair, this const will make the windows show pair(s), and if mulpitle - pairs.
+        private const int k_SquareSize = 80;
+        private const int k_EmptyList = 0;
         private int m_NumOfColums;
         private int m_NumOfRows;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
@@ -40,7 +47,7 @@ namespace UIManager
         {
             m_NumOfColums = i_NumOfColumns;
             m_NumOfRows = i_NumOfRows;
-            GameManager.m_FirstPlayer = new Player(i_FirstPlayerName, k_HumanPlayer);
+            GameManager.m_FirstPlayer = new Player(i_FirstPlayerName, v_HumanPlayer);
             GameManager.m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
             m_GameImages = new Image[(m_NumOfColums * m_NumOfRows) / k_LettersInPair]; // the number of images need is the number of (rows * number of columns) / 2
             InitializeComponents();
@@ -76,7 +83,7 @@ namespace UIManager
                     // First Square (top left one)
                     if (i == k_FirstRowOrColumn && j == k_FirstRowOrColumn)
                     {
-                        m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(12, 12);
+                        m_BoardGame.BoardGameWithButtons[i, j].Location = new Point(k_SpaceBetweenSquares, k_SpaceBetweenSquares);
                     }
                     else
                     {
@@ -103,7 +110,7 @@ namespace UIManager
                 }
             }
 
-            CreatePlayersLabels();
+            createPlayersLabels();
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -127,68 +134,67 @@ namespace UIManager
 
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
-            //m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new Size(80, 80);
-            columnIndex = (int)(i_ColumnIndex + '0' + k_ColumsOffset);
-            rowIndex = (int)(i_RowIndex + '0' + k_RowOffset);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new Size(k_SquareSize, k_SquareSize);
+            columnIndex = (int)(i_ColumnIndex + Settings.k_CharToIntOffSet + k_ColumsOffset);
+            rowIndex = (int)(i_RowIndex + Settings.k_CharToIntOffSet + k_RowOffset);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Name = Convert.ToChar(columnIndex).ToString() + Convert.ToChar(rowIndex).ToString();
         }
 
         private void constructFirstRow(int i_RowIndex, int i_ColumnIndex)
         {
-            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + 12;
-            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.Y;
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - k_BuildSquareOffset].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + k_SpaceBetweenSquares;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - k_BuildSquareOffset].Location.Y;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
         private void constructFirstColumn(int i_RowIndex, int i_ColumnIndex)
         {
-            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.X;
-            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + 12;
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - k_BuildSquareOffset, i_ColumnIndex].Location.X;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - k_BuildSquareOffset, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + k_SpaceBetweenSquares;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
         private void constructMiddleSquares(int i_RowIndex, int i_ColumnIndex)
         {
-            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + 12;
-            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + 12;
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - k_BuildSquareOffset].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + k_SpaceBetweenSquares;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - k_BuildSquareOffset, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + k_SpaceBetweenSquares;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
-        private void CreatePlayersLabels()
+        private void createPlayersLabels()
         {
             // m_CurrentPlayersTurn
             this.m_CurrentPlayersTurn.AutoSize = true;
             int XLocationCurrent = m_BoardGame.BoardGameWithButtons[0, 0].Location.X;
-            int YLocationCurrent = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, 0].Bottom + 10;
-            this.m_CurrentPlayersTurn.Location = new System.Drawing.Point(XLocationCurrent, YLocationCurrent);
+            int YLocationCurrent = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, 0].Bottom + k_SpaceBetweenPlayerLabels;
+            this.m_CurrentPlayersTurn.Location = new Point(XLocationCurrent, YLocationCurrent);
             this.m_CurrentPlayersTurn.Name = "m_CurrentPlayersTurn";
-            this.m_CurrentPlayersTurn.Size = new System.Drawing.Size(137, 20);
+            this.m_CurrentPlayersTurn.Size = new Size(137, 20);
             this.m_CurrentPlayersTurn.TabIndex = 0;
-            this.m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
 
             // m_FirstPlayerScore
             this.m_FirstPlayerScore.AutoSize = true;
             int XLocationFirst = m_CurrentPlayersTurn.Location.X;
-            int YLocationFirst = m_CurrentPlayersTurn.Bottom + 10;
-            this.m_FirstPlayerScore.Location = new System.Drawing.Point(XLocationFirst, YLocationFirst);
+            int YLocationFirst = m_CurrentPlayersTurn.Bottom + k_SpaceBetweenPlayerLabels;
+            this.m_FirstPlayerScore.Location = new Point(XLocationFirst, YLocationFirst);
             this.m_FirstPlayerScore.Name = "m_FirstPlayerScore";
-            this.m_FirstPlayerScore.Size = new System.Drawing.Size(137, 20);
+            this.m_FirstPlayerScore.Size = new Size(137, 20);
             this.m_FirstPlayerScore.TabIndex = 0;
             this.m_FirstPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            this.m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
 
             // m_SecondPlayerScore
             this.m_SecondPlayerScore.AutoSize = true;
             int XLocationSecond = m_FirstPlayerScore.Location.X;
-            int YLocationSecond = m_FirstPlayerScore.Bottom + 10;
-            this.m_SecondPlayerScore.Location = new System.Drawing.Point(XLocationSecond, YLocationSecond);
+            int YLocationSecond = m_FirstPlayerScore.Bottom + k_SpaceBetweenPlayerLabels;
+            this.m_SecondPlayerScore.Location = new Point(XLocationSecond, YLocationSecond);
             this.m_SecondPlayerScore.Name = "m_SecondPlayerScore";
-            this.m_SecondPlayerScore.Size = new System.Drawing.Size(137, 20);
+            this.m_SecondPlayerScore.Size = new Size(137, 20);
             this.m_SecondPlayerScore.TabIndex = 0;
             this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+            this.m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
 
             // add labels to form
             this.Controls.Add(m_CurrentPlayersTurn);
@@ -202,9 +208,9 @@ namespace UIManager
         private void setGameWindowSize()
         {
             // Need to change to const
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + 12;
-            int YWindowSize = m_SecondPlayerScore.Bottom + 12;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + k_SpaceBetweenWindowToButtons;
+            int YWindowSize = m_SecondPlayerScore.Bottom + k_SpaceBetweenWindowToButtons;
             this.ClientSize = new System.Drawing.Size(XWindowSize, YWindowSize);
         }
 
@@ -264,7 +270,7 @@ namespace UIManager
             }
 
             // need to change to const
-            if (GameManager.s_AvailbleMoves.Count == 0)
+            if (GameManager.s_AvailbleMoves.Count == k_EmptyList)
             {
                 gameFinishedDialog();
             }
@@ -304,7 +310,7 @@ namespace UIManager
         private void checkForComputerTurn()
         {
             ////need to change 0 to const
-            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > 0)
+            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
             {
                 m_IsComputerTurn = true;
                 doComputerTurn();
@@ -357,12 +363,12 @@ namespace UIManager
         {
             if (m_IsFirstPlayerTurn)
             {
-                m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
                 m_FirstPlayerScore.Refresh();
             }
             else
             {
-                m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < 2 ? " Pair(s)" : " Pairs");
+                m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
                 m_SecondPlayerScore.Refresh();
             }
         }

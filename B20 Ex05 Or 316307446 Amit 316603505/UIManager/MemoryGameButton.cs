@@ -10,21 +10,21 @@ namespace UIManager
 {
     class MemoryGameButton : Button
     {
-        private readonly MemoryGame.Square m_Button;
-        private readonly Image m_Image;
+        private readonly MemoryGame.Square r_Button;
+        private readonly Image r_Image;
 
         public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame, Image i_Image) :
             base()
         {
-            m_Button = i_SquareInBoardGame;
-            m_Image = i_Image;
+            r_Button = i_SquareInBoardGame;
+            r_Image = i_Image;
 
         }
 
         public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame) :
             base()
         {
-            m_Button = i_SquareInBoardGame;
+            r_Button = i_SquareInBoardGame;
 
         }
 
@@ -32,14 +32,14 @@ namespace UIManager
         {
             get
             {
-                return m_Button;
+                return r_Button;
             }
         }
         public Image ButtonImage
         {
             get
             {
-                return m_Image;
+                return r_Image;
             }
         }
     }

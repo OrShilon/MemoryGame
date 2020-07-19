@@ -15,7 +15,7 @@ namespace UIManager
         private const string k_AgainstPlayer = "Against a Friend";
         private const string k_AgainstComputer = "Against Computer";
         private const string k_Computer = "-computer-";
-        private const char k_CharToIntOffSet = '0';
+        internal const char k_CharToIntOffSet = '0';
         private const int k_BoardSizesIndexOffSet = 1; // gets the appropriate board size as requested
         private const int k_RestartBoardSizes = 0;  // returns to 4 x 4 board size
         private const int k_ColumnIndex = 0; 
