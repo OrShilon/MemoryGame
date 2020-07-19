@@ -8,20 +8,20 @@ namespace UIManager
 {
     class BoardGameWindows
     {
-        private readonly MemoryGame.BoardGame m_BoardGameLogic;
-        private readonly MemoryGameButton[,] m_BoardGameButtons;
+        private readonly MemoryGame.BoardGame r_BoardGameLogic;
+        private readonly MemoryGameButton[,] r_BoardGameButtons;
 
         public BoardGameWindows(int i_NumOfColumns, int i_NumOfRows)
         {
-            m_BoardGameLogic = new MemoryGame.BoardGame(i_NumOfRows, i_NumOfColumns);
-            m_BoardGameButtons = new MemoryGameButton[i_NumOfRows, i_NumOfColumns];
+            r_BoardGameLogic = new MemoryGame.BoardGame(i_NumOfRows, i_NumOfColumns);
+            r_BoardGameButtons = new MemoryGameButton[i_NumOfRows, i_NumOfColumns];
         }
 
         public MemoryGame.BoardGame BoardGameWithSquares
         {
             get
             {
-                return m_BoardGameLogic;
+                return r_BoardGameLogic;
             }
         }
 
@@ -29,7 +29,7 @@ namespace UIManager
         {
             get
             {
-                return m_BoardGameButtons;
+                return r_BoardGameButtons;
             }
         }
     }

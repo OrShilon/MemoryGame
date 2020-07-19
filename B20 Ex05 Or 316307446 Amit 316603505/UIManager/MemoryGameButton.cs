@@ -11,13 +11,13 @@ namespace UIManager
     class MemoryGameButton : Button
     {
         private readonly MemoryGame.Square m_Button;
-        private readonly Image m_image;
+        private readonly Image m_Image;
 
-        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame, Image[] i_image) :
+        public MemoryGameButton(MemoryGame.Square i_SquareInBoardGame, Image i_Image) :
             base()
         {
             m_Button = i_SquareInBoardGame;
-            m_image = i_image[(int)(Convert.ToChar(m_Button.letter) - MemoryGame.ComputerManager.k_BottomSpotedLetterBound)];
+            m_Image = i_Image;
 
         }
 
@@ -39,7 +39,7 @@ namespace UIManager
         {
             get
             {
-                return m_image;
+                return m_Image;
             }
         }
     }

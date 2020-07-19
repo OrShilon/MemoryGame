@@ -20,6 +20,7 @@ namespace UIManager
         private const int k_RowOffset = 1; // Same as column offset, but for the rows
         private const bool k_HumanPlayer = true; // Use to create first player, that is always human
         public const int k_LettersInPair = 2; // Each letter has 2 appearances in the board game.
+        private const int k_FirstRowOrColumn = 0; // This const is to check whether we are trying to build a square from the first row / column
         private int m_NumOfColums;
         private int m_NumOfRows;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
@@ -71,32 +72,29 @@ namespace UIManager
                 for (int j = 0; j < m_NumOfColums; j++)
                 {
                     buildSquareProperties(i, j);
-                    //m_BoardGame.BoardGameWithButtons[i, j].UseVisualStyleBackColor = true;
 
-                    // need to change 0 const
-                    // First Square
-                    if (i == 0 && j == 0)
+                    // First Square (top left one)
+                    if (i == k_FirstRowOrColumn && j == k_FirstRowOrColumn)
                     {
                         m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(12, 12);
                     }
                     else
                     {
                         // if true, we are in the first row
-                        // need to change 0 const
-                        if (i == 0)
+                        if (i == k_FirstRowOrColumn)
                         {
-                            constractFirstRow(i, j);
+                            constructFirstRow(i, j);
                         }
                         else
                         {
-                            // need to change 0 const
-                            if (j == 0)
+                            // if true, we are in the first column
+                            if (j == k_FirstRowOrColumn)
                             {
-                                constractFirstColumn(i, j);
+                                constructFirstColumn(i, j);
                             }
                             else
                             {
-                                constractMiddleSquares(i, j);
+                                constructMiddleSquares(i, j);
                             }
                         }
                     }
@@ -115,12 +113,12 @@ namespace UIManager
         {
             int columnIndex;
             int rowIndex;
-            MemoryGame.Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i_RowIndex, i_ColumnIndex];
+            Square currentSquare = m_BoardGame.BoardGameWithSquares.m_SuqaresValue[i_RowIndex, i_ColumnIndex];
+            Image squareImage = squareImage = m_GameImages[(int)(Convert.ToChar(currentSquare.letter) - ComputerManager.k_BottomSpotedLetterBound)];
 
-            if(m_HasInternetConnection)
+            if (m_HasInternetConnection)
             {
-                // להעביר לממורי גיים בוטום תמונה ספציפית ולא כל פעם את המערך של התמונות!!!!
-                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare, m_GameImages);
+                m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare, squareImage);
             }
             else
             {
@@ -130,31 +128,31 @@ namespace UIManager
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
             //m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].FlatAppearance.BorderSize = 20;
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new System.Drawing.Size(80, 80);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new Size(80, 80);
             columnIndex = (int)(i_ColumnIndex + '0' + k_ColumsOffset);
             rowIndex = (int)(i_RowIndex + '0' + k_RowOffset);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Name = Convert.ToChar(columnIndex).ToString() + Convert.ToChar(rowIndex).ToString();
         }
 
-        private void constractFirstRow(int i_RowIndex, int i_ColumnIndex)
+        private void constructFirstRow(int i_RowIndex, int i_ColumnIndex)
         {
             int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + 12;
             int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.Y;
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
-        private void constractFirstColumn(int i_RowIndex, int i_ColumnIndex)
+        private void constructFirstColumn(int i_RowIndex, int i_ColumnIndex)
         {
             int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.X;
             int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + 12;
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
-        private void constractMiddleSquares(int i, int j)
+        private void constructMiddleSquares(int i_RowIndex, int i_ColumnIndex)
         {
-            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i, j - 1].Location.X + m_BoardGame.BoardGameWithButtons[i, j].Right + 12;
-            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i - 1, j].Location.Y + m_BoardGame.BoardGameWithButtons[i, j].Bottom + 12;
-            m_BoardGame.BoardGameWithButtons[i, j].Location = new System.Drawing.Point(ButtonXLocation, ButtonYLocation);
+            int ButtonXLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex - 1].Location.X + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Right + 12;
+            int ButtonYLocation = m_BoardGame.BoardGameWithButtons[i_RowIndex - 1, i_ColumnIndex].Location.Y + m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Bottom + 12;
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Location = new Point(ButtonXLocation, ButtonYLocation);
         }
 
         private void CreatePlayersLabels()
