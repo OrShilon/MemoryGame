@@ -307,7 +307,7 @@ namespace UIManager
 
         private void checkForComputerTurn()
         {
-            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
+            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.IsHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
             {
                 m_IsComputerTurn = true;
                 doComputerTurn();
