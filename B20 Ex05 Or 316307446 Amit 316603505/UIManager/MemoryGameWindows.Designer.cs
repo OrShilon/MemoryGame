@@ -1,6 +1,6 @@
 ﻿namespace UIManager
 {
-    partial class NewMemoryGameWindows
+    partial class MemoryGameWindows
     {
         /// <summary>
         /// Required designer variable.

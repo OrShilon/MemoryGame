@@ -65,12 +65,13 @@ namespace UIManager
             string secondPlayerName = m_TextBoxSecondPlayer.Text;
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
             m_ClosedForTheFirstTime = false;
+            this.Hide();
             this.Close();
 
             //MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             //newGame.ShowDialog();
 
-            NewMemoryGameWindows newGame = new NewMemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
+            MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             newGame.ShowDialog();
         }
 
