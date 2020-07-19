@@ -15,6 +15,11 @@ namespace UIManager
         private const string k_AgainstPlayer = "Against a Friend";
         private const string k_AgainstComputer = "Against Computer";
         private const string k_Computer = "-computer-";
+        private const char k_CharToIntOffSet = '0';
+        private const int k_BoardSizesIndexOffSet = 1; 
+        private const int k_RestartBoardSizes = 0; 
+        private const int k_ColumnIndex = 0; 
+        private const int k_RowIndex = 4;
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
         private bool m_ClosedForTheFirstTime = true;
@@ -42,10 +47,9 @@ namespace UIManager
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
         {
-            //need to change 1 to const
-            if (m_BoardSizePositionInList == (r_BoardSize.Count - 1))
+            if (m_BoardSizePositionInList == (r_BoardSize.Count - k_BoardSizesIndexOffSet))
             {
-                m_BoardSizePositionInList = 0;
+                m_BoardSizePositionInList = k_RestartBoardSizes;
             }
             else
             {
@@ -58,18 +62,14 @@ namespace UIManager
         private void m_StartButton_Click(object sender, EventArgs e)
         {
             string boardSize = r_BoardSize[m_BoardSizePositionInList];
-            //need to change to const
-            int numOfColumns = boardSize[0] - '0';
-            int numOfRows = boardSize[4] - '0';
+            int numOfColumns = boardSize[k_ColumnIndex] - k_CharToIntOffSet;
+            int numOfRows = boardSize[k_RowIndex] - k_CharToIntOffSet;
             string firstPlayerName = m_TextBoxFirstPlayer.Text;
             string secondPlayerName = m_TextBoxSecondPlayer.Text;
-            bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false mean that the player is computer
+            bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // false means that the second player is a computer
             m_ClosedForTheFirstTime = false;
             this.Hide();
             this.Close();
-
-            //MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
-            //newGame.ShowDialog();
 
             MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
             newGame.ShowDialog();
