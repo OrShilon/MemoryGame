@@ -132,7 +132,7 @@ namespace UIManager
                 m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex] = new MemoryGameButton(currentSquare);
             }
 
-            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(ButtonClicked);
+            m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Click += new EventHandler(buttonClicked);
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].TabStop = false;
             m_BoardGame.BoardGameWithButtons[i_RowIndex, i_ColumnIndex].Size = new Size(k_SquareSize, k_SquareSize);
             columnIndex = (int)(i_ColumnIndex + Settings.k_CharToIntOffSet + k_ColumsOffset);
@@ -196,25 +196,24 @@ namespace UIManager
             this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
 
-            // add labels to form
+            // Add labels to form
             this.Controls.Add(m_CurrentPlayersTurn);
             this.Controls.Add(m_FirstPlayerScore);
             this.Controls.Add(m_SecondPlayerScore);
 
-            // Set windows size appropriate to the buttons (x) and the second player label (y
+            // Set windows size appropriate to the buttons (x) and the second player label (y)
             setGameWindowSize();
         }
 
         private void setGameWindowSize()
         {
-            // Need to change to const
             this.StartPosition = FormStartPosition.CenterScreen;
             int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + k_SpaceBetweenWindowToButtons;
             int YWindowSize = m_SecondPlayerScore.Bottom + k_SpaceBetweenWindowToButtons;
             this.ClientSize = new System.Drawing.Size(XWindowSize, YWindowSize);
         }
 
-        private void ButtonClicked(object sender, EventArgs e)
+        private void buttonClicked(object sender, EventArgs e)
         {
             m_CurrentButtonClickedByPlayer = sender as MemoryGameButton;
             if(m_HasInternetConnection)
@@ -227,7 +226,7 @@ namespace UIManager
 
             }
 
-            m_CurrentButtonClickedByPlayer.Click -= ButtonClicked;
+            m_CurrentButtonClickedByPlayer.Click -= buttonClicked;
             changeKnownLettersForComputer(m_CurrentButtonClickedByPlayer);
             m_CurrentButtonClickedByPlayer.Refresh();
             if (m_IsGuessNumberOne)
@@ -269,7 +268,6 @@ namespace UIManager
                 m_IsGuessNumberOne = !m_IsGuessNumberOne;
             }
 
-            // need to change to const
             if (GameManager.s_AvailbleMoves.Count == k_EmptyList)
             {
                 gameFinishedDialog();
@@ -298,8 +296,8 @@ namespace UIManager
 
             if (!m_IsComputerTurn)
             {
-                m_FirstButtonGeuss.Click += ButtonClicked;
-                m_SecondButtonGeuss.Click += ButtonClicked;
+                m_FirstButtonGeuss.Click += buttonClicked;
+                m_SecondButtonGeuss.Click += buttonClicked;
             }
 
             GameManager.s_AvailbleMoves.Add(m_FirstButtonGeuss.Name);
@@ -309,7 +307,6 @@ namespace UIManager
 
         private void checkForComputerTurn()
         {
-            ////need to change 0 to const
             if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
             {
                 m_IsComputerTurn = true;
@@ -383,12 +380,12 @@ namespace UIManager
         {
             if (m_IsFirstPlayerTurn)
             {
-                m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+                m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
                 m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
             }
             else
             {
-                m_CurrentPlayersTurn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+                m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
                 m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_SecondPlayer.Name;
             }
         }
