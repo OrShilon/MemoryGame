@@ -9,17 +9,18 @@ namespace MemoryGame
     public class Player
     {
         private int m_Score;
+        private const int k_InitializedScore = 0;
 
         public Player(string i_Name, bool i_IsHuman)
         {
             this.Name = i_Name;
-            this.isHumanPlayer = i_IsHuman; // Will be true if the player is a human player.
-            m_Score = 0;
+            this.IsHumanPlayer = i_IsHuman; // Will be true if the player is a human player.
+            m_Score = k_InitializedScore;
         }
 
         public string Name { get; }
 
-        public bool isHumanPlayer { get; set; }
+        public bool IsHumanPlayer { get; set; }
 
         public int Score
         {
