@@ -40,17 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardGameWindows.cs" />
-    <Compile Include="MemoryGameWindows.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="MemoryGameButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="NewMemoryGameWindows.cs">
+    <Compile Include="MemoryGameWindows.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewMemoryGameWindows.Designer.cs">
-      <DependentUpon>NewMemoryGameWindows.cs</DependentUpon>
+    <Compile Include="MemoryGameWindows.Designer.cs">
+      <DependentUpon>MemoryGameWindows.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Settings.cs">
@@ -68,9 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MemoryGameWindows.resx">
-      <DependentUpon>MemoryGameWindows.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
