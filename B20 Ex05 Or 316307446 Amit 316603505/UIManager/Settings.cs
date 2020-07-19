@@ -16,8 +16,8 @@ namespace UIManager
         private const string k_AgainstComputer = "Against Computer";
         private const string k_Computer = "-computer-";
         internal const char k_CharToIntOffSet = '0';
-        private const int k_BoardSizesIndexOffSet = 1; 
-        private const int k_RestartBoardSizes = 0; 
+        private const int k_BoardSizesIndexOffSet = 1; // gets the appropriate board size as requested
+        private const int k_RestartBoardSizes = 0;  // returns to 4 x 4 board size
         private const int k_ColumnIndex = 0; 
         private const int k_RowIndex = 4;
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
