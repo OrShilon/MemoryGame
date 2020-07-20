@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIManager", "UIManager\UIMa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryGame", "MemoryGame\MemoryGame.csproj", "{18B0421A-5AED-40D6-9273-8AA21DB488C3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EC28325-E6BB-4D08-938D-701B22AA6D07}"
+	ProjectSection(SolutionItems) = preProject
+		B20 Ex05 Or 316307446 Amit 316603505.txt = B20 Ex05 Or 316307446 Amit 316603505.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

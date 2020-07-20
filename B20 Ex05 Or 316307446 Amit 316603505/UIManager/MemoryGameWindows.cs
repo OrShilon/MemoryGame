@@ -1,5 +1,4 @@
-﻿using MemoryGame;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,10 +10,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MemoryGame;
 
 namespace UIManager
 {
-    public partial class MemoryGameWindows : Form
+    internal partial class MemoryGameWindows : Form
     {
         private const int k_ColumsOffset = 17; // When choosing (for example) square A1, then this offset will make the choice of columns to be A insted of '0'
         private const int k_RowOffset = 1; // Same as column offset, but for the rows
@@ -28,6 +28,8 @@ namespace UIManager
         private const int k_IsMultiple = 2; // When a player has zero or single pair, this const will make the windows show pair(s), and if mulpitle - pairs.
         private const int k_SquareSize = 80;
         private const int k_EmptyList = 0;
+        private readonly Color r_FirstPlayerColor = Color.FromArgb((int)192, (int)255, (int)192);
+        private readonly Color r_SecondPlayerColor = Color.FromArgb((int)192, (int)192, (int)255);
         private int m_NumOfColums;
         private int m_NumOfRows;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
@@ -58,22 +60,7 @@ namespace UIManager
 
         public void CreateBoard()
         {
-            WebClient w = new WebClient();
-
-            try
-            {
-                for (int i = 0; i < m_GameImages.Length; i++)
-                {
-                    m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
-                }
-
-                m_HasInternetConnection = true;
-            }
-            catch(Exception we)
-            {
-                m_HasInternetConnection = false;
-            }
-
+            addPictures();
             for (int i = 0; i < m_NumOfRows; i++)
             {
                 for (int j = 0; j < m_NumOfColums; j++)
@@ -114,6 +101,25 @@ namespace UIManager
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        }
+
+        private void addPictures()
+        {
+            WebClient w = new WebClient();
+
+            try
+            {
+                for (int i = 0; i < m_GameImages.Length; i++)
+                {
+                    m_GameImages[i] = Image.FromStream(new MemoryStream(w.DownloadData("https://picsum.photos/80")));
+                }
+
+                m_HasInternetConnection = true;
+            }
+            catch (Exception we)
+            {
+                m_HasInternetConnection = false;
+            }
         }
 
         private void buildSquareProperties(int i_RowIndex, int i_ColumnIndex)
@@ -171,7 +177,7 @@ namespace UIManager
             this.m_CurrentPlayersTurn.Name = "m_CurrentPlayersTurn";
             this.m_CurrentPlayersTurn.Size = new Size(137, 20);
             this.m_CurrentPlayersTurn.TabIndex = 0;
-            this.m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.m_CurrentPlayersTurn.BackColor = r_FirstPlayerColor;
             this.m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
 
             // m_FirstPlayerScore
@@ -182,7 +188,7 @@ namespace UIManager
             this.m_FirstPlayerScore.Name = "m_FirstPlayerScore";
             this.m_FirstPlayerScore.Size = new Size(137, 20);
             this.m_FirstPlayerScore.TabIndex = 0;
-            this.m_FirstPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.m_FirstPlayerScore.BackColor = r_FirstPlayerColor;
             this.m_FirstPlayerScore.Text = GameManager.m_FirstPlayer.Name + ": " + GameManager.m_FirstPlayer.Score + (GameManager.m_FirstPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
 
             // m_SecondPlayerScore
@@ -193,7 +199,7 @@ namespace UIManager
             this.m_SecondPlayerScore.Name = "m_SecondPlayerScore";
             this.m_SecondPlayerScore.Size = new Size(137, 20);
             this.m_SecondPlayerScore.TabIndex = 0;
-            this.m_SecondPlayerScore.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.m_SecondPlayerScore.BackColor = r_SecondPlayerColor;
             this.m_SecondPlayerScore.Text = GameManager.m_SecondPlayer.Name + ": " + GameManager.m_SecondPlayer.Score + (GameManager.m_SecondPlayer.Score < k_IsMultiple ? " Pair(s)" : " Pairs");
 
             // Add labels to form
@@ -210,7 +216,7 @@ namespace UIManager
             this.StartPosition = FormStartPosition.CenterScreen;
             int XWindowSize = m_BoardGame.BoardGameWithButtons[m_NumOfRows - 1, m_NumOfColums - 1].Right + k_SpaceBetweenWindowToButtons;
             int YWindowSize = m_SecondPlayerScore.Bottom + k_SpaceBetweenWindowToButtons;
-            this.ClientSize = new System.Drawing.Size(XWindowSize, YWindowSize);
+            this.ClientSize = new Size(XWindowSize, YWindowSize);
         }
 
         private void buttonClicked(object sender, EventArgs e)
@@ -223,9 +229,12 @@ namespace UIManager
             else
             {
                 m_CurrentButtonClickedByPlayer.Text = m_CurrentButtonClickedByPlayer.Square.letter.ToString();
-
             }
 
+            m_CurrentButtonClickedByPlayer.FlatStyle = FlatStyle.Flat;
+            m_CurrentButtonClickedByPlayer.FlatAppearance.BorderColor = m_IsFirstPlayerTurn ? m_FirstPlayerScore.BackColor : m_SecondPlayerScore.BackColor;
+            m_CurrentButtonClickedByPlayer.FlatAppearance.BorderSize = 3;
+            m_CurrentButtonClickedByPlayer.Refresh();
             m_CurrentButtonClickedByPlayer.Click -= buttonClicked;
             changeKnownLettersForComputer(m_CurrentButtonClickedByPlayer);
             m_CurrentButtonClickedByPlayer.Refresh();
@@ -294,6 +303,9 @@ namespace UIManager
                 m_SecondButtonGeuss.Text = string.Empty;
             }
 
+            m_FirstButtonGeuss.FlatStyle = FlatStyle.System;
+            m_SecondButtonGeuss.FlatStyle = FlatStyle.System;
+
             if (!m_IsComputerTurn)
             {
                 m_FirstButtonGeuss.Click += buttonClicked;
@@ -304,10 +316,9 @@ namespace UIManager
             GameManager.s_AvailbleMoves.Add(m_SecondButtonGeuss.Name);
         }
 
-
         private void checkForComputerTurn()
         {
-            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.isHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
+            if (!m_IsFirstPlayerTurn && !GameManager.m_SecondPlayer.IsHumanPlayer && GameManager.s_AvailbleMoves.Count > k_EmptyList)
             {
                 m_IsComputerTurn = true;
                 doComputerTurn();
@@ -349,9 +360,12 @@ namespace UIManager
             else
             {
                 i_ClickedButton.Text = i_ClickedButton.Square.letter.ToString();
-
             }
 
+            i_ClickedButton.FlatStyle = FlatStyle.Flat;
+            i_ClickedButton.FlatAppearance.BorderColor = m_SecondPlayerScore.BackColor;
+            i_ClickedButton.FlatAppearance.BorderSize = 3;
+            i_ClickedButton.Refresh();
             changeKnownLettersForComputer(i_ClickedButton);
             i_ClickedButton.Refresh();
         }
@@ -380,12 +394,12 @@ namespace UIManager
         {
             if (m_IsFirstPlayerTurn)
             {
-                m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+                m_CurrentPlayersTurn.BackColor = r_FirstPlayerColor;
                 m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_FirstPlayer.Name;
             }
             else
             {
-                m_CurrentPlayersTurn.BackColor = Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+                m_CurrentPlayersTurn.BackColor = r_SecondPlayerColor;
                 m_CurrentPlayersTurn.Text = "Current Player: " + GameManager.m_SecondPlayer.Name;
             }
         }

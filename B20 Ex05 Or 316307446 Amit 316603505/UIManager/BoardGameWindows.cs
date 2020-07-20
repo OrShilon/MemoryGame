@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UIManager
 {
-    class BoardGameWindows
+    internal class BoardGameWindows
     {
         private readonly MemoryGame.BoardGame r_BoardGameLogic;
         private readonly MemoryGameButton[,] r_BoardGameButtons;

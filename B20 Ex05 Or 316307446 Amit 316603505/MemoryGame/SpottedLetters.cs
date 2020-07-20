@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MemoryGame
 {
-
     internal class SpottedLetters
     {
         public string LocationNumberOne { get; set; } = "Uninitialized";

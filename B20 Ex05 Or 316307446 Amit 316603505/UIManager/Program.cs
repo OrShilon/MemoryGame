@@ -7,16 +7,14 @@ using System.Windows.Forms;
 
 namespace UIManager
 {
-    class Program
+    public class Program
     {
-        //[STAThread]
-        static void Main()
+        [STAThread]
+        public static void Main()
         {
-            //Application.EnableVisualStyles();
-            //MemoryGame temp = new MemoryGame(4, 4, true, "amit", "or");
-            //temp.ShowDialog();
-            Settings temp = new Settings();
-            temp.ShowDialog();
+            Application.EnableVisualStyles();
+            Settings memoryGame = new Settings();
+            memoryGame.ShowDialog();
         }
     }
 }

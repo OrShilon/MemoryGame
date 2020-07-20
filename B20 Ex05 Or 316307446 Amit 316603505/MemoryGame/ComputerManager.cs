@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace MemoryGame
 {
-
     public class ComputerManager
     {
         public const int k_BottomSpotedLetterBound = 'G'; // Bottom boundary for letters to guess in the board game.
         private SpottedLetters[] smartGuess; // Location 0 represent 'G', location 1 represent 'H', location 2 represent 'I', and so on..
-        Random rand;
+        private Random rand;
 
         public ComputerManager(int i_NumOfRows, int i_NumOfColumns)
         {

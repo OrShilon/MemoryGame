@@ -8,8 +8,8 @@ namespace MemoryGame
 {
     public class Player
     {
-        private int m_Score;
         private const int k_InitializedScore = 0;
+        private int m_Score;
 
         public Player(string i_Name, bool i_IsHuman)
         {
