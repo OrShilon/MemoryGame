@@ -1,6 +1,6 @@
 ﻿namespace UIManager
 {
-    partial class Settings
+    internal partial class Settings
     {
         /// <summary>
         /// Required designer variable.
@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace UIManager
 {
-    public partial class Settings : Form
+    internal partial class Settings : Form
     {
         private const string k_AgainstPlayer = "Against a Friend";
         private const string k_AgainstComputer = "Against Computer";
