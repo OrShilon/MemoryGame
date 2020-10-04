@@ -37,6 +37,7 @@
             this.m_StartButton = new System.Windows.Forms.Button();
             this.m_AgainstFriendOrComputer = new System.Windows.Forms.Button();
             this.m_BoardSizeLabel = new System.Windows.Forms.Label();
+            this.m_ComputerLevel = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // m_FirstPlayerNameLabel
@@ -114,12 +115,24 @@
             this.m_BoardSizeLabel.TabIndex = 7;
             this.m_BoardSizeLabel.Text = "Board Size:";
             // 
+            // m_ComputerLevel
+            // 
+            this.m_ComputerLevel.BackColor = System.Drawing.Color.DodgerBlue;
+            this.m_ComputerLevel.Location = new System.Drawing.Point(421, 120);
+            this.m_ComputerLevel.Name = "m_ComputerLevel";
+            this.m_ComputerLevel.Size = new System.Drawing.Size(180, 40);
+            this.m_ComputerLevel.TabIndex = 8;
+            this.m_ComputerLevel.Text = "Easy";
+            this.m_ComputerLevel.UseVisualStyleBackColor = false;
+            this.m_ComputerLevel.Click += new System.EventHandler(this.m_ComputerLevel_Click);
+            // 
             // Settings
             // 
             this.AcceptButton = this.m_StartButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 341);
+            this.Controls.Add(this.m_ComputerLevel);
             this.Controls.Add(this.m_BoardSizeLabel);
             this.Controls.Add(this.m_AgainstFriendOrComputer);
             this.Controls.Add(this.m_StartButton);
@@ -150,5 +163,6 @@
         private System.Windows.Forms.Button m_StartButton;
         private System.Windows.Forms.Button m_AgainstFriendOrComputer;
         private System.Windows.Forms.Label m_BoardSizeLabel;
+        private System.Windows.Forms.Button m_ComputerLevel;
     }
 }
