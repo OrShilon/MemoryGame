@@ -17,11 +17,14 @@ namespace UIManager
         private const string k_Computer = "-computer-";
         private const int k_BoardSizesIndexOffSet = 1; // Gets the appropriate board size as requested
         private const int k_RestartBoardSizes = 0;  // Returns to 4 x 4 board size
+        private const int k_RestartComputerLevel = 0; // Restart the computer level to easy position
         private const int k_ColumnIndex = 0; 
         private const int k_RowIndex = 4;
         internal const char k_CharToIntOffSet = '0';
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
+        private readonly List<string> r_ComputerLevel = new List<string> { "Easy", "Hard", "Expert" };
+        private int m_ComputerLevelPosition = 1;
         private bool m_ClosedForTheFirstTime = true;
 
         public Settings()
@@ -36,13 +39,25 @@ namespace UIManager
             if (m_TextBoxSecondPlayer.Enabled)
             {
                 m_AgainstFriendOrComputer.Text = k_AgainstComputer;
+                m_ComputerLevel.Enabled = false;
                 m_TextBoxSecondPlayer.Text = string.Empty;
             }
             else
             {
                 m_AgainstFriendOrComputer.Text = k_AgainstPlayer;
+                m_ComputerLevel.Enabled = true;
                 m_TextBoxSecondPlayer.Text = k_Computer;
             }
+        }
+
+        private void m_ComputerLevel_Click(object sender, EventArgs e)
+        {
+            if (m_ComputerLevelPosition == r_ComputerLevel.Count)
+            {
+                m_ComputerLevelPosition = k_RestartComputerLevel;
+            }
+
+            m_ComputerLevel.Text = r_ComputerLevel[m_ComputerLevelPosition++];
         }
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
