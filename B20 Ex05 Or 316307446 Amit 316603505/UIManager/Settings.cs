@@ -16,6 +16,7 @@ namespace UIManager
         private const string k_AgainstComputer = "Against Computer";
         private const string k_Computer = "-computer-";
         private const int k_BoardSizesIndexOffSet = 1; // Gets the appropriate board size as requested
+        private const int k_ComputeLevelIndexOffSet = 1; // Gets the appropriate computer level as requested
         private const int k_RestartBoardSizes = 0;  // Returns to 4 x 4 board size
         private const int k_RestartComputerLevel = 0; // Restart the computer level to easy position
         private const int k_ColumnIndex = 0; 
@@ -24,7 +25,7 @@ namespace UIManager
         private readonly List<string> r_BoardSize = new List<string> { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private int m_BoardSizePositionInList = 0;
         private readonly List<string> r_ComputerLevel = new List<string> { "Easy", "Hard", "Expert" };
-        private int m_ComputerLevelPosition = 1;
+        private int m_ComputerLevelPosition = 0;
         private bool m_ClosedForTheFirstTime = true;
 
         public Settings()
@@ -52,12 +53,16 @@ namespace UIManager
 
         private void m_ComputerLevel_Click(object sender, EventArgs e)
         {
-            if (m_ComputerLevelPosition == r_ComputerLevel.Count)
+            if (m_ComputerLevelPosition == r_ComputerLevel.Count - k_ComputeLevelIndexOffSet)
             {
                 m_ComputerLevelPosition = k_RestartComputerLevel;
             }
+            else
+            {
+                m_ComputerLevelPosition++;
+            }
 
-            m_ComputerLevel.Text = r_ComputerLevel[m_ComputerLevelPosition++];
+            m_ComputerLevel.Text = r_ComputerLevel[m_ComputerLevelPosition];
         }
 
         private void m_BoardSizeButton_Click(object sender, EventArgs e)
@@ -82,10 +87,11 @@ namespace UIManager
             string firstPlayerName = m_TextBoxFirstPlayer.Text;
             string secondPlayerName = m_TextBoxSecondPlayer.Text;
             bool isSecondPlayerHuman = m_TextBoxSecondPlayer.Enabled; // False means that the second player is a computer
+            string computerLevel = r_ComputerLevel[m_ComputerLevelPosition];
             m_ClosedForTheFirstTime = false;
             this.Hide();
             this.Close();
-            MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman);
+            MemoryGameWindows newGame = new MemoryGameWindows(numOfColumns, numOfRows, firstPlayerName, secondPlayerName, isSecondPlayerHuman, computerLevel);
             newGame.ShowDialog();
         }
 

@@ -32,30 +32,29 @@ namespace MemoryGame
             generateAvailableMoves();
         }
 
-        public static void makeComputerTurn(out string o_FirstSquareGuessed, out string o_SecondSquareGuessed, BoardGame i_BoardGame)
+        public static void makeComputerTurn(out string o_FirstSquareGuessed, out string o_SecondSquareGuessed, string i_ComputerLevel, BoardGame i_BoardGame)
         {
             bool firstGuessWasSmart = false;
             bool isGuessNumberOne = true;
             char unusedLetter = 'a';
 
-            o_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart, i_BoardGame); // ununsedLetter will make the method MakeGuesses
+            o_FirstSquareGuessed = makeGuesses(isGuessNumberOne, unusedLetter, ref firstGuessWasSmart, i_ComputerLevel, i_BoardGame); // ununsedLetter will make the method MakeGuesses
             s_ManageComputerTurns.KnownLetters(o_FirstSquareGuessed, i_BoardGame);
             s_AvailbleMoves.Remove(o_FirstSquareGuessed);
             char firstLetterGuessed = i_BoardGame.m_SuqaresValue[o_FirstSquareGuessed[1] - k_BottomnumbersBound, o_FirstSquareGuessed[0] - k_BottomLetersBound].letter;
-            o_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart, i_BoardGame);
+            o_SecondSquareGuessed = makeGuesses(!isGuessNumberOne, firstLetterGuessed, ref firstGuessWasSmart, i_ComputerLevel, i_BoardGame);
             s_ManageComputerTurns.KnownLetters(o_SecondSquareGuessed, i_BoardGame);
         }
 
-        private static string makeGuesses(bool i_IsGuessNumberOne, char i_FirstLetterGuessed, ref bool io_FirstGuessWasSmart, BoardGame i_BoardGame)
+        private static string makeGuesses(bool i_IsGuessNumberOne, char i_FirstLetterGuessed, ref bool io_FirstGuessWasSmart, string i_ComputerLevel, BoardGame i_BoardGame)
         {
             string nextMove;
-            rand = new Random();
             int isSmartGuess = int.MaxValue; // Initialize to max int value so in the second guess it will be smart / not smart, depends on the first guess
             const int k_MakeSmartGuess = 1; // If RandomComputerOrSmartComputer = k_MakeSmartGuess, the computer will make a smart guess.
 
             if (i_IsGuessNumberOne)
             {
-                isSmartGuess = rand.Next(1, 3); // if we get 1, it will be smart guess. if we get 2, it will be random guess
+                isSmartGuess = isSmartMove(i_ComputerLevel); // if we get 1, it will be smart guess. if we get 2, it will be random guess
             }
 
             // checks if next move should be smart or not
@@ -72,6 +71,31 @@ namespace MemoryGame
             i_BoardGame.m_SuqaresValue[nextMove[1] - k_BottomnumbersBound, nextMove[0] - k_BottomLetersBound].visible = true;
 
             return nextMove;
+        }
+
+        // Will determain if the next move is going to be smart one, depends on the chosen level.
+        private static int isSmartMove(string i_ComputerLevel)
+        {
+            rand = new Random();
+            int isSmart; // if the random number will be 1 - the next move will be smart
+
+            switch(i_ComputerLevel)
+            {
+                case "Easy":
+                    isSmart = rand.Next(1, 5);
+                    break;
+                case "Hard":
+                    isSmart = rand.Next(1, 4);
+                    break;
+                case "Expert":
+                    isSmart = rand.Next(1, 3);
+                    break;
+                default:
+                    isSmart = rand.Next(1, 4);
+                    break;
+            }
+
+            return isSmart;
         }
 
         private static void generateAvailableMoves()

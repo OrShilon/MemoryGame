@@ -32,6 +32,7 @@ namespace UIManager
         private readonly Color r_SecondPlayerColor = Color.FromArgb((int)192, (int)192, (int)255);
         private int m_NumOfColums;
         private int m_NumOfRows;
+        private string m_ComputerLevel;
         private bool m_IsFirstPlayerTurn = true; // True means first player's turn, false means second player's turn.
         private bool m_IsComputerTurn = false;
         private bool m_IsGuessNumberOne = true;
@@ -45,12 +46,13 @@ namespace UIManager
         private Image[] m_GameImages;
         private MemoryGameButton m_CurrentButtonClickedByPlayer; // Onlu used by a human player
 
-        public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman)
+        public MemoryGameWindows(int i_NumOfColumns, int i_NumOfRows, string i_FirstPlayerName, string i_SecondPlayerName, bool i_IsAgainstHuman, string i_ComputerLevel)
         {
             m_NumOfColums = i_NumOfColumns;
             m_NumOfRows = i_NumOfRows;
             GameManager.m_FirstPlayer = new Player(i_FirstPlayerName, v_HumanPlayer);
             GameManager.m_SecondPlayer = new Player(i_SecondPlayerName, i_IsAgainstHuman);
+            m_ComputerLevel = i_ComputerLevel;
             m_GameImages = new Image[(m_NumOfColums * m_NumOfRows) / k_LettersInPair]; // the number of images need is the number of (rows * number of columns) / 2
             InitializeComponents();
             m_BoardGame = new BoardGameWindows(m_NumOfColums, m_NumOfRows);
@@ -330,7 +332,7 @@ namespace UIManager
         {
             string firstGuess;
             string secondGuess;
-            GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_BoardGame.BoardGameWithSquares);
+            GameManager.makeComputerTurn(out firstGuess, out secondGuess, m_ComputerLevel, m_BoardGame.BoardGameWithSquares);
 
             foreach (MemoryGameButton button in m_BoardGame.BoardGameWithButtons)
             {
